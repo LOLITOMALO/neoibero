@@ -1,0 +1,2043 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mapa Íbero · Neoiberian Explorer</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* === Variables de color === */
+    :root {
+      --iberian-clay:#8B4513;
+      --iberian-ochre:#CC7722;
+      --iberian-stone:#2c2c2c;
+      --iberian-sand:#D2B48C;
+      --iberian-rust:#A0522D;
+      --iberian-bronze:#CD7F32;
+      --bg-grad-1:#f8f5f0;
+      --bg-grad-2:#f4f1ec;
+      --bg-grad-3:#f0ede8;
+      --dark:#1a1410;
+      --accent:#d4a574;
+    }
+    
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: transparent;
+      color: var(--iberian-stone);
+      font-family: 'Inter', -apple-system, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    /* === Hero Header === */
+    header.wrap {
+      position: relative;
+      background-color: #2c2416;
+      color: var(--bg-grad-1);
+      overflow: visible;
+      max-width: none;
+      margin: 0;
+      background-image: linear-gradient(135deg, #2c2416 0%, #4a3828 100%);
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+    }
+
+    .hero-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 24px 50px;
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .hero-copy {
+      max-width: 60%;
+      z-index: 1;
+    }
+
+.hero-figure {
+    position: absolute;
+    top: -110px;
+    bottom: auto;
+    right: -40px;
+    width: min(85vw, 980px);
+    height: 460px;
+    background-image: url(iberos.png);
+    background-repeat: no-repeat;
+    background-position: right top;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 0;
+}
+
+
+    /* === Main Container === */
+    main.wrap {
+      max-width: 1400px;
+      margin: 0 auto 80px;
+      padding: 0 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* === Títulos === */
+    h1 {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: none;
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .lead {
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: clamp(12px, 2vw, 26px);
+      font-weight: 400;
+      color: rgba(248, 245, 240, 0.85);
+      margin-bottom: 0;
+      font-style: italic;
+margin-top: 0;
+    }
+.hero-description {
+    font-size: clamp(14px, 2.5vw, 14px);
+    font-weight: 400;
+    color: rgba(248, 245, 240, 0.85);
+    margin-bottom: 16px;
+}
+
+    .geometric-accent {
+      display: none;
+    }
+
+    h2, h3 {
+      color: var(--iberian-clay);
+      font-family: 'Cinzel', Georgia, serif;
+      text-shadow: none;
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    h3 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      margin-top: 0;
+    }
+
+    /* === Cards === */
+    .card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 
+        0 4px 6px rgba(0,0,0,0.05),
+        0 10px 25px rgba(139,69,19,0.08);
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeIn 0.6s ease backwards;
+      padding: 24px;
+      border: none;
+    }
+
+    .card:not(.map-wrap) {
+      background:
+        radial-gradient(circle at top right, rgba(205,127,50,0.10), transparent 42%),
+        linear-gradient(180deg, #ffffff 0%, #fffaf4 100%);
+      border: 1px solid rgba(139,69,19,0.08);
+    }
+
+    .map-wrap.card {
+      padding: 0;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.2s; }
+    .card:nth-child(3) { animation-delay: 0.3s; }
+
+    /* === Grid === */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-top: 0;
+    }
+
+    @media (min-width: 1024px) {
+      .grid {
+        grid-template-columns: 2fr 1fr 1fr;
+      }
+    }
+
+    /* === Map === */
+    .map-wrap {
+      position: relative;
+      padding: 0;
+      z-index: 5;
+    }
+
+    #map {
+      height: 600px;
+      width: 100%;
+      border-radius: 16px;
+    }
+
+    .legend {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      padding: 16px 18px;
+      font-size: 13px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 1000;
+      border: none;
+    }
+
+    .legend > div:first-child {
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--dark);
+      font-size: 14px;
+      font-family: 'Cinzel', serif;
+    }
+
+    .legend > div:not(:first-child) {
+      display: flex;
+      align-items: center;
+      margin: 6px 0;
+      color: #4b5563;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 10px;
+      flex-shrink: 0;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .dot-oppida { background: var(--iberian-clay); }
+    .dot-contact { background: var(--iberian-bronze); }
+    .dot-tribe { 
+      background: transparent;
+      border: 2.5px solid var(--iberian-rust);
+    }
+
+    /* === Controls === */
+    label {
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 14px;
+      color: #4b5563;
+      margin: 6px 0;
+      user-select: none;
+    }
+
+    label strong {
+      color: var(--dark);
+      font-family: 'Cinzel', serif;
+      font-size: 16px;
+      margin-right: 8px;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      cursor: pointer;
+      accent-color: var(--iberian-clay);
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #e5e7eb;
+      background: #fafafa;
+      border-radius: 10px;
+      outline: none;
+      font-size: 14px;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      color: var(--iberian-stone);
+      box-shadow: none;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--iberian-bronze);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(205,127,50,0.1);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, var(--iberian-clay), var(--iberian-bronze), var(--iberian-rust));
+      outline: none;
+      -webkit-appearance: none;
+      margin: 12px 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--dark);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--dark);
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    #yearLabel {
+      font-family: 'Cinzel', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--iberian-clay);
+      display: block;
+      text-align: center;
+      margin: 8px 0;
+    }
+
+    .ticks {
+      position: relative;
+      height: 28px;
+      font-size: 11px;
+      color: #9ca3af;
+      user-select: none;
+      margin-top: 8px;
+    }
+    .ticks span {
+      position: absolute;
+      transform: translateX(-50%);
+      white-space: nowrap;
+    }
+    .ticks .tick-minor {
+      top: 0;
+      width: 1px;
+      height: 5px;
+      background: #cbb89a;
+    }
+    .ticks .tick-major {
+      top: 0;
+      padding-top: 10px;
+      font-weight: 500;
+      color: var(--iberian-stone);
+    }
+    .ticks .tick-major::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 8px;
+      background: var(--iberian-clay);
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+
+    /* === Side Panels === */
+    .side {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (min-width: 1024px) {
+      .side {
+        grid-template-columns: minmax(360px, 1fr) minmax(420px, 1.35fr);
+        align-items: start;
+      }
+    }
+
+    .right-stack {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      align-content: start;
+    }
+
+    .period-card {
+      background:
+        radial-gradient(circle at top right, rgba(205,127,50,0.10), transparent 42%),
+        linear-gradient(180deg, #ffffff 0%, #fffaf4 100%);
+    }
+
+    .panel-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--iberian-rust);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .panel-title-row {
+      margin: 0 0 6px;
+    }
+
+    .context-kicker {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.4px;
+      color: var(--iberian-rust);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .period-lead {
+      margin: 10px 0 14px;
+      color: #4b3425;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .coin-bridge {
+      margin: 12px 0 16px;
+      padding: 13px 15px;
+      border: 1px solid #ead8c3;
+      border-left: 4px solid var(--iberian-bronze);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.74);
+      color: #4b3425;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .coin-bridge strong {
+      color: var(--iberian-clay);
+      font-family: 'Cinzel', Georgia, serif;
+      letter-spacing: .02em;
+    }
+
+    .period-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin: 16px 0 6px;
+    }
+
+    .period-stat {
+      border: 1px solid #f0e2d1;
+      background: rgba(255,255,255,0.72);
+      border-radius: 14px;
+      padding: 12px 10px;
+      text-align: center;
+    }
+
+    .period-stat strong {
+      display: block;
+      font-family: 'Cinzel', Georgia, serif;
+      font-size: 24px;
+      line-height: 1;
+      color: var(--iberian-clay);
+      margin-bottom: 5px;
+    }
+
+    .period-stat span {
+      display: block;
+      font-size: 11px;
+      color: #6b5b50;
+      line-height: 1.25;
+    }
+
+    .stat-names {
+      margin-top: 10px;
+      padding-top: 9px;
+      border-top: 1px dashed #ead8c3;
+      text-align: left;
+      min-height: 24px;
+    }
+
+    .stat-details {
+      width: 100%;
+    }
+
+    .stat-details summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--iberian-clay);
+      font-size: 11px;
+      line-height: 1.25;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    .stat-details summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .stat-details summary::after {
+      content: '›';
+      color: var(--iberian-bronze);
+      font-weight: 900;
+      font-size: 15px;
+      transition: transform .2s ease;
+    }
+
+    .stat-details[open] summary::after {
+      transform: rotate(90deg);
+    }
+
+    .stat-detail-list {
+      display: grid;
+      gap: 5px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px dashed #ead8c3;
+      max-height: 220px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .stat-name-line {
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr);
+      align-items: center;
+      gap: 6px;
+      color: #4f4036;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .stat-name-line .dot {
+      width: 8px;
+      height: 8px;
+      margin: 0;
+    }
+
+    .stat-name-text {
+      white-space: normal;
+    }
+
+    .stat-empty {
+      color: #9a8878;
+      font-size: 11px;
+      line-height: 1.25;
+      font-style: italic;
+    }
+
+    .mini-section {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px dashed #ead8c3;
+    }
+
+    .mini-section-title {
+      font-family: 'Cinzel', Georgia, serif;
+      color: var(--iberian-clay);
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0 0 8px;
+    }
+
+    .context-list {
+      margin: 0;
+      padding-left: 18px;
+      color: #4b5563;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .context-list li {
+      margin: 5px 0;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      border: 1px solid rgba(139,69,19,0.18);
+      background: #fbf7f1;
+      color: #5a3a24;
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .reading-list {
+      list-style: none;
+      padding: 0;
+      margin: 4px 0 0;
+      color: #4b5563;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .reading-list li {
+      position: relative;
+      padding-left: 18px;
+      margin: 8px 0;
+    }
+
+    .reading-list li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: .68em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--iberian-bronze);
+    }
+
+
+
+    .read-details {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .read-summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      user-select: none;
+    }
+
+    .read-summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .read-summary-title {
+      display: block;
+      font-family: 'Cinzel', Georgia, serif;
+      color: var(--iberian-clay);
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
+    .read-chevron {
+      flex-shrink: 0;
+      font-size: 22px;
+    }
+
+    .read-details[open] .read-chevron {
+      transform: rotate(90deg);
+    }
+
+    .read-body {
+      padding: 0 24px 24px;
+      margin-top: -8px;
+    }
+
+    @media (max-width: 640px) {
+      .period-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    #visibleScope {
+      font-size: 13px;
+      color: #9ca3af;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    /* === Accordion === */
+    ul.clean {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .group-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--iberian-clay);
+      font-weight: 600;
+      margin: 20px 0 10px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--accent);
+    }
+
+    .group-label:first-child {
+      margin-top: 0;
+    }
+
+    .accordion-item {
+      list-style: none;
+      border-bottom: 1px solid #f3f4f6;
+      transition: background 0.2s;
+      padding: 0;
+    }
+
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+
+    .accordion-header {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 14px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--dark);
+    }
+
+    .accordion-header:hover {
+      padding-left: 8px;
+    }
+
+
+    .card:not(.map-wrap) .accordion-item {
+      border-bottom-color: rgba(234,216,195,0.78);
+    }
+
+    .card:not(.map-wrap) .accordion-header {
+      border-radius: 10px;
+      padding-left: 2px;
+      padding-right: 2px;
+    }
+
+    .card:not(.map-wrap) .accordion-header:hover {
+      background: rgba(139,69,19,0.045);
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .card:not(.map-wrap) .accordion-body {
+      color: #4b3425;
+    }
+
+    .accordion-header:focus-visible {
+      outline: 2px solid var(--iberian-bronze);
+      outline-offset: 2px;
+    }
+
+    .accordion-title {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-family: Georgia, "Times New Roman", serif; /* Georgia para títulos del acordeón */
+    }
+
+    .accordion-chevron {
+      font-size: 16px;
+      transition: transform 0.25s ease;
+      color: var(--iberian-bronze);
+      font-weight: bold;
+    }
+
+    .accordion-item.open .accordion-chevron {
+      transform: rotate(90deg);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      padding: 0 0 0 24px;
+      color: #4b5563;
+      font-size: 14px;
+      line-height: 1.7;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .accordion-item.open .accordion-body {
+      max-height: 1000px;
+      padding-bottom: 16px;
+    }
+
+    .accordion-body p {
+      margin: 8px 0;
+    }
+
+    .accordion-body strong {
+      color: var(--dark);
+      display: block;
+      margin-top: 12px;
+    }
+
+    .accordion-meta {
+      font-size: 12px;
+      color: #9ca3af;
+      font-style: italic;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #e5e7eb;
+    }
+
+    #timelineList {
+      list-style: none;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* === Prose/Documentation === */
+    .prose {
+      line-height: 1.7;
+    }
+
+    .prose.card {
+      padding: 28px;
+    }
+
+    .prose h2 {
+      margin-top: 24px;
+      margin-bottom: 12px;
+    }
+
+    .prose h3 {
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+
+    .prose p {
+      margin-bottom: 12px;
+    }
+
+    code {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 13px;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 16px;
+      overflow: auto;
+      font-size: 13px;
+      margin: 12px 0;
+    }
+
+    /* === Responsive === */
+    @media (max-width: 768px) {
+      .hero-inner {
+        padding: 35px 20px 45px;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .hero-copy {
+        max-width: 100%;
+      }
+
+      .hero-figure {
+        position: absolute;
+        right: 10px;
+        width: 140px;
+        top: 10px;
+        bottom: auto;
+        background-position: top right;
+        opacity: 0.9;
+      }
+
+      h1 {
+        font-size: 32px !important;
+      }
+
+      .lead {
+        font-size: 14px;
+      }
+
+      main.wrap {
+        margin-top: -30px;
+      }
+
+      #map {
+        height: 400px;
+      }
+
+      .legend {
+        right: 12px;
+        top: 12px;
+        padding: 12px 14px;
+        font-size: 12px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Reglas antiguas de .hero (no usadas, las dejo por si las quieres reutilizar) */
+    .hero {
+      position: relative;
+      color: var(--cream);
+      padding: 80px 24px 100px;
+      overflow: hidden;
+    }
+    
+    .hero-content {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .hero {
+      position: relative;
+      color: var(--cream);
+      padding: 80px 24px 100px;
+      overflow: hidden;
+      background-color: #2c2416;
+      background-image:
+        linear-gradient(135deg, #2c2416 0%, #4a3828 100%),
+        url("iberos.png");
+      background-repeat: no-repeat, no-repeat;
+      background-position:
+        center center,
+        right bottom;
+      background-size:
+        cover,
+        min(28vw, 1400px) auto;
+    }
+
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <!-- Mapa centrado visualmente -->
+    <div class="map-wrap card" aria-label="Mapa de España con capas históricas (paleta Neoíbero)">
+      <div id="map"></div>
+      <div class="legend">
+        <div style="font-weight:600;margin-bottom:4px">Leyenda</div>
+        <div><span class="dot dot-oppida"></span>Oppida / santuarios</div>
+        <div><span class="dot dot-contact"></span>Colonias / contactos</div>
+        <div><span class="dot dot-tribe"></span>Áreas tribales (aprox.)</div>
+      </div>
+    </div>
+
+    <!-- CONTROLES: cronología (slider), capas y búsqueda, AHORA DEBAJO DEL MAPA -->
+    <section class="grid" style="margin-top:32px">
+      <div class="card period-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+          <label for="year"><strong>Año:</strong> <span id="yearLabel"></span></label>
+          <label style="font-size:12px"><input type="checkbox" id="showAllYears"> Mostrar todo</label>
+        </div>
+        <input id="year" type="range" min="-800" max="100" step="5">
+        <div class="ticks" id="ticks"></div>
+      </div>
+
+      <div class="card period-card">
+        <label><strong>Capas</strong></label></br>
+        <label><input type="checkbox" id="layerTribes" checked> Áreas tribales</label><br>
+        <label><input type="checkbox" id="layerSites" checked> Oppida / santuarios</label><br>
+        <label><input type="checkbox" id="layerContacts" checked> Colonias y contactos</label>
+      </div>
+
+      <div class="card period-card">
+        <label for="filter"><strong>Filtro por nombre</strong></label>
+        <input id="filter" type="text" placeholder="Escribe 'Sagunto', 'Gadir', 'Baza'…">
+        <div class="hint">El filtro aplica a todas las capas visibles.</div>
+      </div>
+    </section>
+
+    <!-- Paneles laterales: elementos visibles + cronología clave -->
+    <div class="side">
+      <div class="card period-card">
+        <div class="panel-kicker">Lectura del mapa</div>
+        <h3 class="panel-title-row">Elementos visibles <span id="visibleScope"></span></h3>
+        <p class="hint">
+          Pulsa sobre cada pueblo, oppidum o colonia para desplegar una ficha;
+          al abrir uno se cierran los demás.
+        </p>
+        <ul class="clean" id="visibleList"></ul>
+      </div>
+      <div class="right-stack">
+        <details class="card period-card read-details" aria-label="Guía rápida para interpretar el mapa">
+          <summary class="read-summary">
+            <span>
+              <span class="context-kicker">Guía rápida</span>
+              <span class="read-summary-title">Cómo leer este mapa</span>
+            </span>
+            <span class="accordion-chevron read-chevron">›</span>
+          </summary>
+          <div class="read-body">
+            <p class="hint">
+              Despliega este bloque cuando necesites recordar el criterio de lectura general.
+            </p>
+            <ul class="reading-list">
+              <li><strong>Las áreas tribales</strong> son aproximaciones didácticas: no equivalen a fronteras políticas modernas.</li>
+              <li><strong>Los oppida</strong> marcan centros fortificados, santuarios o núcleos urbanos relevantes para cada fase.</li>
+              <li><strong>Los contactos mediterráneos</strong> señalan enclaves fenicios, griegos, púnicos o romanos que modifican redes comerciales y culturales.</li>
+              <li><strong>El control de año</strong> no pretende fijar una fecha absoluta para cada fenómeno, sino ordenar fases amplias de ocupación, contacto y romanización.</li>
+            </ul>
+          </div>
+        </details>
+
+        <div class="card period-card">
+          <div class="panel-kicker">Eje histórico</div>
+          <h3 class="panel-title-row">Cronología clave</h3>
+          <p class="hint">
+            Abre cada hito para ver una explicación ampliada; solo uno permanece abierto.
+          </p>
+          <ol id="timelineList" style="margin:0 0 0 18px"></ol>
+        </div>
+
+        <div class="card period-card" aria-label="Lectura contextual del periodo seleccionado">
+          <div class="context-kicker" id="periodKicker">Lectura contextual</div>
+          <h3 style="margin:0 0 6px" id="periodTitle">Ficha del periodo</h3>
+          <p class="hint" id="periodScope"></p>
+          <p class="period-lead" id="periodLead"></p>
+          <p class="coin-bridge" id="periodCoinBridge"></p>
+
+          <div class="period-grid" aria-label="Resumen de elementos visibles">
+            <div class="period-stat">
+              <strong id="statTribes">0</strong>
+              <span>Pueblos / áreas</span>
+              <div class="stat-names" id="statTribeNames" aria-label="Pueblos visibles"></div>
+            </div>
+            <div class="period-stat">
+              <strong id="statSites">0</strong>
+              <span>Oppida / santuarios</span>
+              <div class="stat-names" id="statSiteNames" aria-label="Oppida y santuarios visibles"></div>
+            </div>
+            <div class="period-stat">
+              <strong id="statContacts">0</strong>
+              <span>Colonias / contactos</span>
+              <div class="stat-names" id="statContactNames" aria-label="Colonias y contactos visibles"></div>
+            </div>
+          </div>
+
+          <div class="mini-section">
+            <div class="mini-section-title">Claves de interpretación</div>
+            <ul class="context-list" id="periodKeys"></ul>
+          </div>
+
+          <div class="mini-section">
+            <div class="mini-section-title">Hitos cercanos en la escala</div>
+            <ul class="context-list" id="periodMilestones"></ul>
+          </div>
+
+          <div class="mini-section">
+            <div class="mini-section-title">Topónimos destacados visibles</div>
+            <div class="chips" id="periodHighlights"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+  const fmtYear = (y) => (y < 0 ? Math.abs(y) + " a. C." : y + " d. C.");
+  const YEAR_MIN = -800, YEAR_MAX = 100;
+  function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  const COLORS = {
+    oppida:  cssVar('--iberian-clay')    || '#8B4513',
+    contact: cssVar('--iberian-bronze')  || '#CD7F32',
+    tribe:   cssVar('--iberian-rust')    || '#A0522D',
+    tribeFill: cssVar('--iberian-ochre') || '#CC7722',
+  };
+
+  /* === PUEBLOS / GRUPOS HUMANOS (texto ampliado) === */
+  const TRIBES = [
+    {
+      name: "Turdetanos",
+      center: [37.4, -5.9],
+      radius: 120000,
+      start: -500,
+      end: -100,
+      note: "Población íbera del valle bajo y medio del Guadalquivir, heredera parcial de tradiciones tartésicas. Sus ciudades controlarían un espacio de tierras muy fértiles, rutas de navegación fluvial y explotaciones mineras próximas. Las fuentes clásicas los presentan como una de las comunidades más 'cultas' de Hispania, a las que atribuyen leyes escritas desde tiempo antiguo."
+    },
+    {
+      name: "Bastetanos",
+      center: [37.5, -2.7],
+      radius: 90000,
+      start: -500,
+      end: -50,
+      note: "Grupo del sureste peninsular, en torno a Basti (Baza) y Acci (Guadix). Se relacionan con una densa red de asentamientos en altura, necrópolis ricas y santuarios con esculturas de gran calidad. Su territorio enlaza los corredores que comunican la costa mediterránea con las tierras altas interiores y con zonas mineras."
+    },
+    {
+      name: "Contestanos",
+      center: [38.6, -0.8],
+      radius: 85000,
+      start: -500,
+      end: -50,
+      note: "Pueblo situado entre el sur de la actual provincia de Valencia y buena parte de Alicante y Albacete. Sus centros urbanos conectan puertos mediterráneos con rutas de interior, y muestran una intensa romanización desde época republicana. Su cultura material incluye cerámica pintada y epigrafía ibérica significativa."
+    },
+    {
+      name: "Edetanos",
+      center: [39.6, -0.5],
+      radius: 70000,
+      start: -500,
+      end: -50,
+      note: "Población del hinterland de la actual Valencia, con Edeta (Llíria) como núcleo destacado. Controlarían los pasos entre la costa y los valles interiores, articulando redes agrícolas y ganaderas. En su territorio se documentan textos ibéricos, necrópolis complejas y evidencias de jerarquías sociales bien marcadas."
+    },
+    {
+      name: "Ilergetes",
+      center: [41.6, 0.6],
+      radius: 70000,
+      start: -500,
+      end: -100,
+      note: "Grupo asentado en los llanos del Segre y el Cinca, en torno a la actual Lleida. Su posición los sitúa en un cruce de caminos entre el Ebro, la Meseta y el nordeste litoral. Las fuentes romanas mencionan a sus dirigentes en el contexto de las guerras púnicas y de los primeros enfrentamientos en Hispania."
+    },
+    {
+      name: "Ilercavones",
+      center: [40.8, 0.5],
+      radius: 70000,
+      start: -500,
+      end: -50,
+      note: "Pueblo del bajo Ebro y del norte de Castellón y Teruel, en un espacio que combina desembocadura fluvial, llanuras interiores y sierras costeras. Su territorio articula rutas marítimas y terrestres, y muestra elementos de continuidad entre las tradiciones ibéricas y los paisajes agrarios de época romana."
+    },
+    {
+      name: "Oretanos (ibéricos)",
+      center: [38.5, -3.3],
+      radius: 80000,
+      start: -500,
+      end: -50,
+      note: "Grupo del alto Guadalquivir, vinculado a la explotación de metales (especialmente plomo y plata) y al control de pasos hacia la Meseta. Cástulo aparece como centro de primer orden en época ibérica y romana. Su posición estratégica explica la presencia intensa de ejércitos y negociadores mediterráneos."
+    },
+    {
+      name: "Lacetanos",
+      center: [41.8, 1.8],
+      radius: 60000,
+      start: -450,
+      end: -50,
+      note: "Población del interior de la Cataluña central, en zonas de altiplano y montaña media. Sus asentamientos en altura controlan pasos entre los Pirineos y las llanuras litorales. Se documentan vínculos tanto con otros grupos íberos como con comunidades del interior de filiación más céltica."
+    },
+    {
+      name: "Layetanos",
+      center: [41.4, 2.1],
+      radius: 40000,
+      start: -500,
+      end: -50,
+      note: "Pueblo de la costa de Barcelona y su entorno inmediato. Su territorio está muy expuesto a contactos fenicios, púnicos y griegos, y posteriormente a la presencia romana. Oppida como Puig Castellar muestran murallas, viviendas y cerámicas que reflejan una fuerte integración en las redes mediterráneas."
+    },
+    {
+      name: "Indiketes",
+      center: [42.1, 3.1],
+      radius: 40000,
+      start: -575,
+      end: -50,
+      note: "Grupo del Empordà, en el nordeste peninsular, en torno al entorno de Emporion (Empúries). La convivencia con el asentamiento griego crea un paisaje muy híbrido, con centros indígenas, barrios coloniales y áreas rituales compartidas. Constituye uno de los laboratorios clave para estudiar el encuentro entre íberos y griegos."
+    },
+    {
+      name: "Ausetanos",
+      center: [41.9, 2.3],
+      radius: 50000,
+      start: -450,
+      end: -50,
+      note: "Pueblo de la zona de Vic (Osona) y áreas adyacentes. Sus asentamientos ocupan colinas y plataformas que dominan valles agrícolas y rutas ganaderas. La documentación arqueológica refleja tanto tradiciones locales como procesos de adaptación a los modelos romanos desde época temprana."
+    },
+    {
+      name: "Cessetanos",
+      center: [41.2, 1.2],
+      radius: 50000,
+      start: -450,
+      end: -50,
+      note: "Grupo de la franja del Penedès y del entorno de Tarraco. Sus tierras conectan la costa con los pasos hacia el interior, convirtiéndolos en intermediarios de gran parte del comercio litoral. Con la fundación y desarrollo de Tarraco, muchas de sus comunidades se integran rápidamente en estructuras urbanas romanas."
+    },
+    {
+      name: "Sedetanos (frontera)",
+      center: [41.6, -0.9],
+      radius: 65000,
+      start: -400,
+      end: -50,
+      note: "Población del valle medio del Ebro, en torno a la actual Zaragoza. Ocupan un área fronteriza entre comunidades de tradición ibérica y grupos del interior más celtibéricos. Su posición frente a las grandes vías fluviales y terrestres los convierte en actores relevantes en el contexto de las guerras celtibéricas y sertorianas."
+    },
+    {
+      name: "Mastienos",
+      center: [37.8, -1.1],
+      radius: 60000,
+      start: -500,
+      end: -200,
+      note: "Grupo relacionado con el entorno de Mastia y la posterior Carthago Nova, en el sudeste peninsular. Su territorio combina bahías abrigadas, colinas mineras y corredores hacia el interior. Los textos antiguos recuerdan a Mastia como un área rica y codiciada, lo que explica la presencia cartaginesa temprana."
+    }
+  ];
+
+  /* === OPPIDA / SANTUARIOS (texto ampliado) === */
+  const IBERIAN_SITES = [
+    {
+      name: "Ullastret (Indika)",
+      coords: [42.0, 3.0],
+      start: -550,
+      end: -200,
+      note: "Gran oppidum del nordeste, asociado al pueblo de los indiketes. Destaca por sus murallas monumentales, urbanismo bien estructurado y hallazgos que incluyen cerámicas importadas, armamento y elementos de prestigio. Es un buen ejemplo de ciudad indígena que dialoga con el cercano enclave griego de Emporion."
+    },
+    {
+      name: "La Bastida de les Alcusses (Moixent)",
+      coords: [38.85, -0.81],
+      start: -500,
+      end: -350,
+      note: "Asentamiento fortificado en altura, conocido por el 'Guerrero de Moixent', pequeña escultura de bronce que representa a un jinete armado. El trazado urbano, con calles y viviendas organizadas, ilustra un alto grado de planificación. Fue destruido hacia finales del siglo IV a. C. por causas aún debatidas."
+    },
+    {
+      name: "La Alcudia – Ilici (Elche)",
+      coords: [38.25, -0.72],
+      start: -500,
+      end: 100,
+      note: "Yacimiento clave para comprender la larga duración de un centro ibérico que se transforma en ciudad romana. En este entorno se halló la célebre Dama de Elche. Las fases ibéricas, republicanas y altoimperiales se superponen, lo que permite seguir la evolución de las élites y de los paisajes urbanos."
+    },
+    {
+      name: "Basti (Baza)",
+      coords: [37.49, -2.77],
+      start: -400,
+      end: -50,
+      note: "Centro del área bastetana, conocido sobre todo por su necrópolis. De una de sus tumbas procede la Dama de Baza, escultura sedente pintada que combina función funeraria y simbólica. El conjunto funerario refleja la existencia de linajes poderosos con rituales complejos y abundante ajuar."
+    },
+    {
+      name: "Cástulo (Linares)",
+      coords: [38.11, -3.63],
+      start: -500,
+      end: 50,
+      note: "Ciudad situada en un cruce de caminos del alto Guadalquivir, asociada a ricas explotaciones mineras. Juega un papel estratégico en las guerras púnicas y en los conflictos de la República romana. Las excavaciones han sacado a la luz mosaicos, edificios públicos y barrios residenciales de gran interés."
+    },
+    {
+      name: "Arse / Saguntum (Sagunto)",
+      coords: [39.68, -0.28],
+      start: -500,
+      end: 100,
+      note: "Ciudad célebre por el asedio cartaginés de 219 a. C., que Roma utilizó como casus belli para la Segunda Guerra Púnica. Antes y después del conflicto, el asentamiento combina tradiciones ibéricas con una creciente presencia de formas urbanas y políticas romanas. Conserva restos de murallas, teatro y otros edificios monumentales."
+    },
+    {
+      name: "Castellar de Meca (Ayora-Alpera)",
+      coords: [38.96, -1.13],
+      start: -400,
+      end: -50,
+      note: "Oppidum rupestre situado en una meseta amesetada, con un sistema espectacular de cisternas y caminos tallados en la roca. Su emplazamiento domina pasos naturales entre la Meseta y el levante. El lugar ejemplifica el aprovechamiento intensivo del relieve para defensa, almacenamiento de agua y control de rutas."
+    },
+    {
+      name: "Tossal de Sant Miquel – Edeta (Llíria)",
+      coords: [39.63, -0.58],
+      start: -500,
+      end: -50,
+      note: "Tradicionalmente identificado con la ciudad ibérica de Edeta. Presenta estructuras defensivas, barrios de viviendas y materiales que incluyen inscripciones en lengua ibérica. A través de sus fases se observa la transformación de una capital regional dentro del proceso de conquista y reorganización romana."
+    },
+    {
+      name: "La Serreta (Alcoi)",
+      coords: [38.72, -0.45],
+      start: -375,
+      end: -50,
+      note: "Asentamiento y santuario en altura, con vistas sobre varios valles. Es conocido por los exvotos, las cerámicas pintadas y la complejidad de sus espacios rituales. Constituye un punto clave para entender cómo las comunidades contestanas articulan el culto, la memoria y las redes de intercambio."
+    },
+    {
+      name: "Puig Castellar (Sta. Coloma de Gramenet)",
+      coords: [41.46, 2.23],
+      start: -350,
+      end: -50,
+      note: "Poblado layetano en una colina que domina la llanura de Barcelona y la costa. Sus murallas, viviendas y silos ilustran la vida cotidiana de una comunidad que participa tanto en redes locales como en intercambios mediterráneos. Hoy es también un espacio didáctico y de interpretación del paisaje ibérico."
+    },
+    {
+      name: "Lucentum – Tossal de Manises (Alicante)",
+      coords: [38.37, -0.42],
+      start: -300,
+      end: 100,
+      note: "Asentamiento ibérico que da paso a la ciudad romana de Lucentum. El yacimiento conserva restos de murallas, termas, espacios domésticos y edificios públicos. Es un buen ejemplo de cómo un núcleo ibérico costero se reconfigura como municipio romano, manteniendo continuidades en el poblamiento."
+    },
+    {
+      name: "Cabezo Lucero (Guardamar del Segura)",
+      coords: [38.08, -0.61],
+      start: -400,
+      end: -200,
+      note: "Necrópolis ibérica cuyos ajuares y esculturas, entre las que destaca la Dama de Guardamar, ilustran la riqueza simbólica de los rituales funerarios. El conjunto ayuda a reconstruir la imagen de las élites locales, su relación con el mundo mediterráneo y la importancia de la memoria de los antepasados."
+    },
+    {
+      name: "El Cigarralejo (Mula)",
+      coords: [38.05, -1.49],
+      start: -350,
+      end: -50,
+      note: "Necrópolis de más de un centenar de tumbas, muy bien documentada, que permite seguir la evolución de las prácticas funerarias ibéricas en el sureste. La variedad de ajuares (armas, cerámicas, objetos personales) refleja diferencias de estatus y género, y constituye una fuente fundamental para el estudio social."
+    },
+    {
+      name: "Cerro de los Santos (Montealegre del Castillo)",
+      coords: [38.73, -1.23],
+      start: -350,
+      end: -50,
+      note: "Santuario ibérico famoso por sus esculturas de oferentes en piedra, muchas de ellas depositadas en museos. Las figuras sostienen vasos o elementos rituales, y muestran una gran diversidad de atuendos. El lugar evidencia la existencia de peregrinaciones y prácticas religiosas compartidas por varias comunidades."
+    },
+    {
+      name: "Porcuna – Cerrillo Blanco (Obulco)",
+      coords: [37.88, -4.19],
+      start: -400,
+      end: -50,
+      note: "Conjunto escultórico ibérico excepcional, formado por relieves y estatuas que representan escenas de combate, figuras de élite y motivos simbólicos. Fue desmontado y enterrado en la Antigüedad, lo que ha favorecido la conservación de muchas piezas. Su estudio ha transformado la visión sobre el arte ibérico."
+    },
+    {
+      name: "Puente Tablas (Jaén)",
+      coords: [37.81, -3.71],
+      start: -600,
+      end: -300,
+      note: "Oppidum temprano con un urbanismo muy planificado y una puerta-santuario alineada con fenómenos astronómicos. Su secuencia permite seguir la formación de centros jerárquicos en el alto Guadalquivir antes del pleno desarrollo de la cultura ibérica clásica. Es clave para entender los orígenes de las élites regionales."
+    }
+  ];
+
+  /* === COLONIAS / CONTACTOS (texto ampliado) === */
+  const CONTACT_SITES = [
+    {
+      name: "Emporion (Empúries, griega)",
+      coords: [42.13, 3.12],
+      start: -575,
+      end: 100,
+      note: "Fundación focea en la costa nordeste de la península. Combina un núcleo griego y, más tarde, un barrio romano con espacios indígenas próximos. Desde aquí se difunden alfabetos, cerámicas de lujo, ideas religiosas y modelos urbanos hacia los grupos íberos del entorno, generando paisajes híbridos."
+    },
+    {
+      name: "Gadir (Cádiz, fenicia)",
+      coords: [36.53, -6.29],
+      start: -800,
+      end: 100,
+      note: "Una de las fundaciones fenicias más antiguas del Mediterráneo occidental. Controla rutas marítimas hacia el Atlántico y se vincula a la explotación de metales y productos agrícolas. Su prolongada ocupación permite rastrear la transición de enclave fenicio a ciudad púnica y, finalmente, romana."
+    },
+    {
+      name: "Qart Hadasht / Carthago Nova (Cartagena)",
+      coords: [37.6, -0.99],
+      start: -228,
+      end: 100,
+      note: "Fundada por Asdrúbal el Bello como base cartaginesa en el sudeste, aprovechando una bahía bien protegida y un entorno rico en recursos mineros. La conquista romana en 209 a. C. convierte la ciudad en capital provincial y en uno de los grandes centros urbanos de Hispania. Su hinterland se articula con comunidades íberas y mestizas."
+    },
+    {
+      name: "Malaka (Málaga, fenicia)",
+      coords: [36.72, -4.42],
+      start: -700,
+      end: 100,
+      note: "Factoría fenicia especializada en salazones y en comercio marítimo. La ciudad se desarrolla sobre una pequeña península y combina barrios artesanales, espacios portuarios y áreas residenciales. La continuidad del asentamiento facilita observar la superposición de fases fenicias, púnicas y romanas."
+    },
+    {
+      name: "Sexi (Almuñécar, fenicia)",
+      coords: [36.73, -3.69],
+      start: -700,
+      end: 100,
+      note: "Enclave fenicio en la costa granadina, articulado con un conjunto de factorías y puertos menores. Su posición intermedia entre Gadir y el sureste favorece el papel de escala en las rutas de larga distancia. Las evidencias materiales muestran contactos con comunidades indígenas del interior bastetano."
+    },
+    {
+      name: "Abdera (Adra, fenicia)",
+      coords: [36.75, -3.02],
+      start: -700,
+      end: 100,
+      note: "Puesto fenicio en el sudeste, cercano a zonas agrícolas y a vías naturales que conducen hacia la Alta Andalucía y la Meseta. Participa en redes de intercambio de vino, aceite, salazones y objetos de prestigio. La posterior presencia romana aprovecha parte de la infraestructura y la experiencia comercial acumulada."
+    }
+  ];
+
+  /* === CRONOLOGÍA CLAVE (texto ampliado) === */
+  const TIMELINE = [
+    {
+      year: -800,
+      label: "Primeras factorías fenicias en el sur (Tiro–Gadir).",
+      detail: "Desde el siglo VIII a. C. grupos fenicios procedentes de la costa levantina del Próximo Oriente fundan enclaves comerciales en el extremo sur de la península. Gadir (Cádiz) se convierte en un nodo atlántico clave para la circulación de metales, materias primas agrícolas y productos manufacturados. Estos contactos introducen nuevas técnicas (por ejemplo, en metalurgia y navegación) y objetos de prestigio que serán reinterpretados por las comunidades indígenas."
+    },
+    {
+      year: -650,
+      label: "Intensificación de intercambios fenicio-púnicos.",
+      detail: "A lo largo del siglo VII y comienzos del VI a. C. se densifica la red de enclaves fenicio-púnicos a lo largo del litoral andaluz y levantino. Aumentan los intercambios de vino, aceite, cerámicas finas y objetos suntuarios, que penetran hacia el interior por medio de rutas terrestres. Esto acelera procesos de diferenciación social en las comunidades locales, pues ciertas familias controlan mejor el acceso a bienes exóticos y a nuevos conocimientos técnicos."
+    },
+    {
+      year: -575,
+      label: "Fundación de Emporion (Empúries) por foceos.",
+      detail: "Los griegos foceos establecen Emporion en la costa nordeste, en contacto directo con poblaciones indígenas indiketes. El enclave funciona como puerto y como punto de redistribución de mercancías en el Mediterráneo noroccidental. Junto a los productos (vino, cerámica, objetos de lujo) se difunden alfabetos, iconografías y formas de organización urbana, que son adoptadas y reinterpretadas por los grupos íberos del entorno."
+    },
+    {
+      year: -500,
+      label: "Consolidación de oppida ibéricos y redes regionales.",
+      detail: "Entre finales del siglo VI y el V a. C. se consolida una red de oppida (ciudades en altura) que articulan el territorio. Muchos de estos centros se rodean de murallas y organizan su espacio interno en barrios y calles. La jerarquía entre núcleos grandes y asentamientos secundarios se hace más clara, y se intensifica la especialización regional: algunas áreas se orientan más al comercio, otras a la ganadería o a la minería."
+    },
+    {
+      year: -450,
+      label: "Difusión de escrituras ibéricas (meridional y nororiental).",
+      detail: "A partir de mediados del siglo V a. C. se generaliza el uso de escrituras paleohispánicas adaptadas de modelos fenicios y griegos. Surgen inscripciones votivas, funerarias y comerciales que reflejan idiomas ibéricos locales, aún no completamente descifrados. La escritura se concentra sobre todo en contextos de élite y rituales, lo que muestra que leer y escribir forma parte de un repertorio de prestigio."
+    },
+    {
+      year: -350,
+      label: "Apogeo urbano; cerámicas pintadas y santuarios monumentales.",
+      detail: "En los siglos IV y III a. C. muchos asentamientos ibéricos alcanzan su máximo desarrollo demográfico y arquitectónico. La cultura material incorpora cerámicas pintadas de gran calidad y repertorios iconográficos muy elaborados. Se documentan santuarios monumentales y necrópolis complejas, con esculturas de piedra y abundantes exvotos, que indican la existencia de un universo religioso articulado y de rituales públicos compartidos."
+    },
+    {
+      year: -300,
+      label: "Primeras acuñaciones locales y monetización creciente.",
+      detail: "Diversas ciudades ibéricas comienzan a emitir moneda propia, a menudo con leyendas en escritura local y motivos simbólicos que aluden a la comunidad. Estas acuñaciones reflejan una economía más integrada, con transacciones habituales en metal y sistemas fiscales que combinan tributos en especie y en moneda. La circulación monetaria facilita la inserción de las comunidades íberas en redes comerciales de largo alcance."
+    },
+    {
+      year: -219,
+      label: "Asedio de Arse (Sagunto); preludio de la II Guerra Púnica.",
+      detail: "El ataque cartaginés contra Arse/Sagunto, ciudad aliada de Roma, desencadena la Segunda Guerra Púnica. El episodio ilustra cómo una comunidad de tradición ibérica se sitúa en el centro de las tensiones entre Cartago y Roma. La destrucción del asentamiento y su posterior reconstrucción condicionan profundamente la historia de la región y marcan un punto de inflexión en la presencia romana en la península."
+    },
+    {
+      year: -209,
+      label: "Escipión toma Qart Hadasht (Cartagena).",
+      detail: "Publio Cornelio Escipión conquista la base cartaginesa de Qart Hadasht, privando a Cartago de un puerto y un hinterland minero decisivos. La ciudad será refundada como Carthago Nova y se convertirá en un núcleo administrativo y económico de primera magnitud. A partir de este momento, la presencia romana en el sudeste se hace estructural, y muchas comunidades íberas pasan a depender directamente de redes políticas romanas."
+    },
+    {
+      year: -197,
+      label: "Hispania Citerior y Ulterior: organización provincial romana.",
+      detail: "Roma divide los territorios peninsulares conquistados en dos grandes provincias: Citerior y Ulterior. El nuevo marco administrativo introduce gobernadores, funcionarios y sistemas de recaudación. Para las comunidades íberas, esto supone renegociar lealtades, soportar cargas fiscales y, al mismo tiempo, acceder a nuevas oportunidades de integración en las estructuras de poder romano."
+    },
+    {
+      year: -154,
+      label: "Inicio de las guerras celtibéricas (contexto peninsular).",
+      detail: "El estallido de las guerras celtibéricas, centradas en la Meseta oriental, afecta también a pueblos íberos de zonas limítrofes y a rutas comerciales compartidas. Roma refuerza su presencia militar en la península, levanta campamentos y fortalece ciudades aliadas. La inestabilidad bélica convive con la continuidad de muchos intercambios cotidianos, lo que genera situaciones muy diversas según las regiones."
+    },
+    {
+      year: -133,
+      label: "Fin de las guerras celtibéricas.",
+      detail: "Con la caída de Numancia se cierra un ciclo prolongado de conflictos entre Roma y las comunidades del interior peninsular. La derrota de los grandes focos de resistencia permite a Roma reorganizar la Meseta y asegurar mejor las comunicaciones entre el valle del Ebro, el alto Duero y la costa. Para las áreas íberas colindantes, esto implica una presencia romana más estable, con nuevas fundaciones urbanas y reordenación de territorios."
+    },
+    {
+      year: -27,
+      label: "Reforma de Augusto y municipalización.",
+      detail: "Las reformas de Augusto reorganizan el mapa provincial hispano y fomentan la creación de municipios y colonias con estatutos jurídicos definidos. Muchas ciudades de tradición ibérica adoptan instituciones municipales de tipo romano, con magistraturas locales y espacios públicos monumentalizados. Este proceso acelera la integración de las élites indígenas en la clase dirigente imperial, sin borrar por completo las tradiciones previas."
+    },
+    {
+      year: -19,
+      label: "Fin de las guerras cántabras; integración peninsular completada.",
+      detail: "La victoria romana sobre cántabros y astures, en el noroeste peninsular, se considera el cierre de la conquista de Hispania. A partir de entonces, la península se integra de forma más homogénea en el Imperio, con una red de calzadas, puertos y ciudades articulada a escala imperial. Los territorios íberos quedan plenamente insertos en este marco, aunque manteniendo muchos rasgos culturales propios."
+    },
+    {
+      year: 14,
+      label: "Muerte de Augusto; romanización avanzada.",
+      detail: "A comienzos del siglo I d. C., Hispania muestra un alto grado de romanización institucional, económica y cultural. La mayoría de los antiguos territorios íberos cuentan con ciudades dotadas de foros, templos y edificios públicos de estilo romano, y las élites locales participan activamente en las estructuras de gobierno. Sin embargo, las lenguas, cultos y tradiciones indígenas no desaparecen de inmediato, sino que conviven y se transforman durante generaciones."
+    }
+  ];
+
+  const PERIODS = [
+    {
+      start: -800,
+      end: -651,
+      kicker: "Horizonte fenicio",
+      title: "Primeros contactos mediterráneos",
+      summary: "El mapa enfatiza los enclaves costeros y las rutas iniciales de intercambio. Las comunidades indígenas aún no aparecen como un sistema urbano ibérico plenamente consolidado, pero empiezan a integrarse en circuitos comerciales de larga distancia.",
+      keys: [
+        "Predominan los puertos y factorías del sur y sureste.",
+        "Los bienes de prestigio y la metalurgia aceleran diferencias sociales locales.",
+        "El interior se conecta por corredores fluviales y pasos naturales, no por fronteras rígidas."
+      ]
+    },
+    {
+      start: -650,
+      end: -576,
+      kicker: "Redes púnicas y preibéricas",
+      title: "Intercambios intensificados",
+      summary: "La costa meridional y levantina gana densidad comercial. En paralelo, los asentamientos indígenas empiezan a mostrar jerarquías más marcadas, rituales complejos y una cultura material cada vez más conectada con el Mediterráneo.",
+      keys: [
+        "Crecen las redes fenicio-púnicas y las escalas portuarias.",
+        "La cerámica, el vino, el aceite y los metales articulan el intercambio.",
+        "Se preparan las condiciones para la futura urbanización ibérica."
+      ]
+    },
+    {
+      start: -575,
+      end: -501,
+      kicker: "Contacto griego",
+      title: "Emporion y formación de redes regionales",
+      summary: "La fundación de Emporion añade un vector griego en el nordeste. El contacto ya no es solo meridional: los grupos costeros e interiores del levante y Cataluña participan en un paisaje cultural más híbrido.",
+      keys: [
+        "El nordeste peninsular se activa como zona de contacto privilegiada.",
+        "Los alfabetos, iconografías y cerámicas importadas ganan visibilidad.",
+        "Los centros indígenas empiezan a comportarse como nodos territoriales."
+      ]
+    },
+    {
+      start: -500,
+      end: -451,
+      kicker: "Urbanización ibérica",
+      title: "Consolidación de oppida y territorios",
+      summary: "Los pueblos íberos aparecen ya como una red de comunidades regionales con centros fortificados, áreas de influencia y jerarquías internas. El mapa combina áreas tribales amplias con puntos urbanos y santuarios.",
+      keys: [
+        "Los oppida estructuran rutas, producción agrícola y defensa.",
+        "Las áreas tribales deben leerse como zonas de influencia aproximadas.",
+        "La costa y los valles interiores funcionan como un sistema conectado."
+      ]
+    },
+    {
+      start: -450,
+      end: -351,
+      kicker: "Escrituras ibéricas",
+      title: "Expansión epigráfica y prestigio local",
+      summary: "La escritura ibérica se difunde en soportes rituales, comerciales y funerarios. En el mapa conviene mirar tanto los centros urbanos como los santuarios, porque la escritura forma parte de prácticas de prestigio, memoria e intercambio.",
+      keys: [
+        "La escritura no implica alfabetización masiva, sino usos sociales concretos.",
+        "Los santuarios y necrópolis son tan importantes como las ciudades.",
+        "La diversidad regional sigue siendo alta: no hay un único modelo ibérico."
+      ]
+    },
+    {
+      start: -350,
+      end: -301,
+      kicker: "Apogeo clásico",
+      title: "Ciudades, santuarios y cerámicas pintadas",
+      summary: "Es una de las fases visualmente más ricas del mundo ibérico. La columna izquierda se llena de oppida y santuarios porque muchas comunidades alcanzan ahora su mayor densidad urbana, ritual y artística.",
+      keys: [
+        "Aumenta la monumentalidad defensiva, funeraria y religiosa.",
+        "Las élites locales expresan poder mediante esculturas, ajuares y espacios rituales.",
+        "El mapa muestra una red policéntrica, no una capital única."
+      ]
+    },
+    {
+      start: -300,
+      end: -220,
+      kicker: "Moneda y tensión geopolítica",
+      title: "Monetización y competencia púnico-romana",
+      summary: "Las acuñaciones locales y la presión de Cartago y Roma transforman el equilibrio regional. Los enclaves costeros y las ciudades estratégicas ganan peso porque las guerras mediterráneas se apoyan en puertos, minas y alianzas indígenas.",
+      keys: [
+        "La moneda indica integración económica y autoridad cívica.",
+        "El sureste peninsular se vuelve especialmente estratégico por sus minas y puertos.",
+        "Las alianzas locales importan tanto como las grandes potencias externas."
+      ]
+    },
+    {
+      start: -219,
+      end: -198,
+      kicker: "II Guerra Púnica",
+      title: "Crisis militar y cambio de hegemonía",
+      summary: "El asedio de Sagunto y la toma romana de Cartagena marcan un giro. El mapa debe leerse como una red de posiciones estratégicas: puertos, pasos, oppida aliados y territorios sometidos a negociación o conflicto.",
+      keys: [
+        "Arse/Saguntum y Qart Hadasht concentran el relato político-militar.",
+        "Muchas comunidades íberas actúan con agendas propias, no como bloques homogéneos.",
+        "La victoria romana no borra de inmediato las estructuras locales."
+      ]
+    },
+    {
+      start: -197,
+      end: -28,
+      kicker: "República romana",
+      title: "Provincialización y reordenación territorial",
+      summary: "Roma organiza Hispania en provincias y consolida su presencia fiscal, militar y administrativa. Persisten pueblos, ciudades y santuarios de tradición ibérica, pero cada vez más insertos en redes romanas.",
+      keys: [
+        "La romanización es gradual y desigual según regiones.",
+        "Algunos centros indígenas prosperan al integrarse en nuevas redes administrativas.",
+        "Las guerras interiores afectan también a las zonas ibéricas de frontera."
+      ]
+    },
+    {
+      start: -27,
+      end: 100,
+      kicker: "Alto Imperio",
+      title: "Municipalización y romanización avanzada",
+      summary: "El mapa entra en una fase de ciudades romanizadas, estatutos municipales y monumentalización pública. Lo ibérico no desaparece de golpe: se transforma, convive y queda absorbido en instituciones, cultos y formas urbanas romanas.",
+      keys: [
+        "Las antiguas ciudades ibéricas adoptan foros, templos y magistraturas romanas.",
+        "Las élites locales se integran en el sistema imperial.",
+        "Las tradiciones indígenas persisten de forma residual, híbrida o ritualizada."
+      ]
+    }
+  ];
+
+  function getVisibleBuckets(){
+    return {
+      tribes: state.layerTribes ? TRIBES.filter(x => withinYear(x) && nameMatches(x)) : [],
+      sites: state.layerSites ? IBERIAN_SITES.filter(x => withinYear(x) && nameMatches(x)) : [],
+      contacts: state.layerContacts ? CONTACT_SITES.filter(x => withinYear(x) && nameMatches(x)) : []
+    };
+  }
+
+  function getCurrentPeriod(){
+    if(state.showAllYears){
+      return {
+        kicker: "Vista completa",
+        title: "Panorama general del mundo ibérico",
+        summary: "Estás viendo todas las fases a la vez: contactos fenicios y griegos, consolidación de oppida, apogeo urbano, crisis púnico-romana y romanización. Es útil como vista de conjunto, aunque mezcla elementos que no fueron contemporáneos.",
+        keys: [
+          "La densidad visual aumenta porque se superponen varios siglos.",
+          "Para una lectura histórica más precisa, desactiva “Mostrar todo” y mueve el año.",
+          "Los puntos y áreas representan ventanas cronológicas amplias, no fotografías exactas de un día concreto."
+        ]
+      };
+    }
+    return PERIODS.find(p => state.year >= p.start && state.year <= p.end) || PERIODS[PERIODS.length - 1];
+  }
+
+  function fillTextList(id, entries){
+    const list = $(id);
+    list.innerHTML = '';
+    entries.forEach(text => {
+      const li = document.createElement('li');
+      li.textContent = text;
+      list.appendChild(li);
+    });
+  }
+
+  function fillStatNames(id, entries, kind){
+    const box = $(id);
+    box.innerHTML = '';
+
+    if(entries.length === 0){
+      const empty = document.createElement('div');
+      empty.className = 'stat-empty';
+      empty.textContent = 'Ninguno visible';
+      box.appendChild(empty);
+      box.title = '';
+      return;
+    }
+
+    const dotClass = {
+      tribe: 'dot-tribe',
+      site: 'dot-oppida',
+      contact: 'dot-contact'
+    }[kind];
+
+    const label = {
+      tribe: 'pueblos / áreas',
+      site: 'oppida / santuarios',
+      contact: 'colonias / contactos'
+    }[kind];
+
+    box.title = entries.map(item => item.name).join(' · ');
+
+    const details = document.createElement('details');
+    details.className = 'stat-details';
+
+    const summary = document.createElement('summary');
+    summary.textContent = `Ver lista completa (${entries.length})`;
+
+    const list = document.createElement('div');
+    list.className = 'stat-detail-list';
+    list.setAttribute('aria-label', `Listado completo de ${label}`);
+
+    entries.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'stat-name-line';
+      row.innerHTML = `<span class="dot ${dotClass}"></span><span class="stat-name-text">${item.name}</span>`;
+      list.appendChild(row);
+    });
+
+    details.appendChild(summary);
+    details.appendChild(list);
+    box.appendChild(details);
+  }
+
+  function getPeriodBridgeText(period, buckets){
+    const counts = `${buckets.tribes.length} pueblos/áreas, ${buckets.sites.length} oppida/santuarios y ${buckets.contacts.length} colonias/contactos`;
+
+    if(state.showAllYears){
+      return `Estos números resumen ${counts} activos en la vista completa. No son un catálogo de cecas ni significan que todos acuñaran moneda: sirven para cruzar capas de territorio, ciudades y contactos mediterráneos que explican dónde pudo circular metal, prestigio, escritura y moneda a lo largo de varios siglos.`;
+    }
+
+    if(period.title.toLowerCase().includes('monetización') || period.kicker.toLowerCase().includes('moneda')){
+      return `En la fase de monetización, estos ${counts} funcionan como una lectura cruzada: los pueblos/áreas dan el marco político y territorial; los oppida y santuarios señalan nodos urbanos, rituales o de poder local; y las colonias/contactos muestran las vías mediterráneas por las que circularon metal, patrones de peso, iconografía y moneda. Importante: el número no equivale a “cecas”; algunos lugares pueden relacionarse con emisión o circulación monetaria, y otros ayudan a entender el contexto que hizo posible esa monetización.`;
+    }
+
+    return `Estos números indican qué elementos del mapa están activos para el año seleccionado: ${counts}. No deben leerse como una lista de emisores de moneda, sino como el contexto territorial y urbano de esa fase. En los periodos próximos a la monetización ayudan a ver qué comunidades, centros y contactos preparan o acompañan la circulación de moneda.`;
+  }
+
+  function updatePeriodPanel(){
+    const period = getCurrentPeriod();
+    const buckets = getVisibleBuckets();
+    const filter = state.filter.trim();
+
+    $('periodKicker').textContent = period.kicker;
+    $('periodTitle').textContent = period.title;
+    $('periodScope').textContent = state.showAllYears
+      ? `Vista acumulada de ${fmtYear(YEAR_MIN)} a ${fmtYear(YEAR_MAX)}${filter ? ` · filtro: “${filter}”` : ''}.`
+      : `Lectura orientativa para ${fmtYear(state.year)}${filter ? ` · filtro: “${filter}”` : ''}.`;
+    $('periodLead').textContent = period.summary;
+    $('periodCoinBridge').textContent = getPeriodBridgeText(period, buckets);
+    $('statTribes').textContent = buckets.tribes.length;
+    $('statSites').textContent = buckets.sites.length;
+    $('statContacts').textContent = buckets.contacts.length;
+    fillStatNames('statTribeNames', buckets.tribes, 'tribe');
+    fillStatNames('statSiteNames', buckets.sites, 'site');
+    fillStatNames('statContactNames', buckets.contacts, 'contact');
+
+    fillTextList('periodKeys', period.keys);
+
+    const milestones = state.showAllYears
+      ? TIMELINE.filter((_, i) => i === 0 || i === 3 || i === 7 || i === 13).map(t => `${fmtYear(t.year)} · ${t.label}`)
+      : TIMELINE
+          .map(t => ({...t, distance: Math.abs(t.year - state.year)}))
+          .sort((a, b) => a.distance - b.distance)
+          .slice(0, 3)
+          .sort((a, b) => a.year - b.year)
+          .map(t => `${fmtYear(t.year)} · ${t.label}`);
+    fillTextList('periodMilestones', milestones);
+
+    const highlights = [
+      ...buckets.tribes.map(x => ({name: x.name, kind: 'pueblo'})),
+      ...buckets.sites.map(x => ({name: x.name, kind: 'oppidum'})),
+      ...buckets.contacts.map(x => ({name: x.name, kind: 'contacto'}))
+    ].slice(0, 8);
+
+    const chipBox = $('periodHighlights');
+    chipBox.innerHTML = '';
+    if(highlights.length === 0){
+      const empty = document.createElement('span');
+      empty.className = 'chip';
+      empty.textContent = 'Sin elementos visibles con estos filtros';
+      chipBox.appendChild(empty);
+    } else {
+      highlights.forEach(item => {
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = `${item.name} · ${item.kind}`;
+        chipBox.appendChild(chip);
+      });
+    }
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const state = {
+    year:-250,
+    showAllYears:false,
+    layerTribes:true,
+    layerSites:true,
+    layerContacts:true,
+    filter:""
+  };
+  const withinYear = (item) => state.showAllYears ? true : (state.year >= item.start && state.year <= item.end);
+  const nameMatches = (item) => item.name.toLowerCase().includes(state.filter.trim().toLowerCase());
+
+  const map = L.map('map').setView([39.8, -3.7], 6);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+  const gTribes = L.layerGroup().addTo(map),
+        gSites = L.layerGroup().addTo(map),
+        gContacts = L.layerGroup().addTo(map);
+
+  function renderLayers(){
+    gTribes.clearLayers();
+    gSites.clearLayers();
+    gContacts.clearLayers();
+
+    if(state.layerTribes){
+      TRIBES.filter(x=>withinYear(x) && nameMatches(x)).forEach(t => {
+        L.circle(t.center, {
+          radius:t.radius,
+          color:COLORS.tribe,
+          weight:2,
+          fillOpacity:.08,
+          fillColor:COLORS.tribeFill
+        })
+        .bindPopup(
+          `<div style="font-size:13px">
+             <div style="font-weight:600">${t.name}</div>
+             <div style="color:#5a534c">${fmtYear(t.start)} – ${fmtYear(t.end)}</div>
+             <p style="margin:.3em 0 0">${t.note}</p>
+             <p style="margin:.3em 0 0;color:#6b7280;font-size:11px">Área aproximada, representada de forma esquemática con fines didácticos.</p>
+           </div>`
+        )
+        .addTo(gTribes);
+      });
+    }
+
+    if(state.layerSites){
+      IBERIAN_SITES.filter(x=>withinYear(x) && nameMatches(x)).forEach(s => {
+        L.circleMarker(s.coords, {
+          radius:6,
+          color:COLORS.oppida,
+          weight:2,
+          fillOpacity:.9,
+          fillColor:COLORS.oppida
+        })
+        .bindPopup(
+          `<div style="font-size:13px">
+             <div style="font-weight:600">${s.name}</div>
+             <div style="color:#5a534c">${fmtYear(s.start)} – ${fmtYear(s.end)}</div>
+             <p style="margin:.3em 0 0">${s.note}</p>
+           </div>`
+        )
+        .addTo(gSites);
+      });
+    }
+
+    if(state.layerContacts){
+      CONTACT_SITES.filter(x=>withinYear(x) && nameMatches(x)).forEach(c => {
+        L.circleMarker(c.coords, {
+          radius:5,
+          color:COLORS.contact,
+          weight:2,
+          fillOpacity:.7,
+          fillColor:COLORS.contact
+        })
+        .bindPopup(
+          `<div style="font-size:13px">
+             <div style="font-weight:600">${c.name}</div>
+             <div style="color:#5a534c">${fmtYear(c.start)} – ${fmtYear(c.end)}</div>
+             <p style="margin:.3em 0 0">${c.note}</p>
+           </div>`
+        )
+        .addTo(gContacts);
+      });
+    }
+  }
+
+  function updateControlsUI(){
+    $('year').disabled = state.showAllYears;
+    $('year').value = state.year;
+    $('yearLabel').textContent = state.showAllYears ? 'todos los años' : fmtYear(state.year);
+    $('visibleScope').textContent = state.showAllYears ? '(todos los años)' : 'en ' + fmtYear(state.year);
+  }
+
+  function updateVisibleList(){
+    const container = $('visibleList');
+    container.innerHTML = '';
+
+    const tribesVisible   = state.layerTribes   ? TRIBES.filter(x=>withinYear(x) && nameMatches(x))        : [];
+    const sitesVisible    = state.layerSites    ? IBERIAN_SITES.filter(x=>withinYear(x) && nameMatches(x)) : [];
+    const contactsVisible = state.layerContacts ? CONTACT_SITES.filter(x=>withinYear(x) && nameMatches(x)) : [];
+
+    if(tribesVisible.length + sitesVisible.length + contactsVisible.length === 0){
+      const li = document.createElement('li');
+      li.style.color = '#6b7280';
+      li.textContent = 'No hay elementos con estos filtros.';
+      container.appendChild(li);
+      return;
+    }
+
+    const typeMeta = {
+      tribe: {
+        dotClass: 'dot-tribe',
+        title: 'Pueblo / grupo humano',
+        meta: 'La delimitación cartográfica es aproximada y se simplifica para uso divulgativo y docente.'
+      },
+      site: {
+        dotClass: 'dot-oppida',
+        title: 'Oppidum / santuario',
+        meta: 'Cronología y funciones sintetizan los principales resultados de la investigación arqueológica disponible.'
+      },
+      contact: {
+        dotClass: 'dot-contact',
+        title: 'Colonia / contacto mediterráneo',
+        meta: 'Fechas redondeadas; muchos enclaves tienen fases fenicias, púnicas y romanas superpuestas.'
+      }
+    };
+
+    function addGroupLabel(text){
+      const label = document.createElement('li');
+      label.className = 'group-label';
+      label.textContent = text;
+      container.appendChild(label);
+    }
+
+    function addAccordionItem(item, kind){
+      const meta = typeMeta[kind];
+      const li = document.createElement('li');
+      li.className = 'accordion-item';
+
+      const header = document.createElement('button');
+      header.type = 'button';
+      header.className = 'accordion-header';
+      header.innerHTML = `
+        <span class="accordion-title">
+          <span class="dot ${meta.dotClass}"></span>${item.name}
+        </span>
+        <span class="accordion-chevron">›</span>
+      `;
+
+      const body = document.createElement('div');
+      body.className = 'accordion-body';
+      body.innerHTML = `
+        <p><strong>${meta.title}</strong></p>
+        <p><strong>Cronología aproximada:</strong> ${fmtYear(item.start)} – ${fmtYear(item.end)}</p>
+        <p>${item.note}</p>
+        <p class="accordion-meta">${meta.meta}</p>
+      `;
+
+      li.appendChild(header);
+      li.appendChild(body);
+
+      header.addEventListener('click', () => {
+        const all = container.querySelectorAll('.accordion-item');
+        const isOpen = li.classList.contains('open');
+        all.forEach(it => it.classList.remove('open'));
+        if(!isOpen){
+          li.classList.add('open');
+        }
+      });
+
+      container.appendChild(li);
+    }
+
+    if(tribesVisible.length){
+      addGroupLabel('Pueblos / tribus íberas');
+      tribesVisible.forEach(t => addAccordionItem(t, 'tribe'));
+    }
+    if(sitesVisible.length){
+      addGroupLabel('Oppida y santuarios');
+      sitesVisible.forEach(s => addAccordionItem(s, 'site'));
+    }
+    if(contactsVisible.length){
+      addGroupLabel('Colonias y contactos mediterráneos');
+      contactsVisible.forEach(c => addAccordionItem(c, 'contact'));
+    }
+  }
+
+  function renderTimeline(){
+    const ticks = $('ticks');
+    ticks.innerHTML = '';
+    const range = YEAR_MAX - YEAR_MIN;
+    // Marcas pequeñas cada 5 años (sin número) + etiquetas con número cada 100 años
+    for (let y = YEAR_MIN; y <= YEAR_MAX; y += 5) {
+      const pct = ((y - YEAR_MIN) / range) * 100;
+      const tick = document.createElement('span');
+      tick.className = (y % 100 === 0) ? 'tick-major' : 'tick-minor';
+      tick.style.left = pct + '%';
+      if (y % 100 === 0) tick.textContent = y;
+      ticks.appendChild(tick);
+    }
+
+    const list = $('timelineList');
+    list.innerHTML = '';
+
+    TIMELINE.forEach(t => {
+      const li = document.createElement('li');
+      li.className = 'accordion-item';
+
+      const header = document.createElement('button');
+      header.type = 'button';
+      header.className = 'accordion-header';
+      header.innerHTML = `
+        <span class="accordion-title">${fmtYear(t.year)} · ${t.label}</span>
+        <span class="accordion-chevron">›</span>
+      `;
+
+      const body = document.createElement('div');
+      body.className = 'accordion-body';
+      body.innerHTML = `<p>${t.detail || t.label}</p>`;
+
+      li.appendChild(header);
+      li.appendChild(body);
+
+      header.addEventListener('click', () => {
+        const all = list.querySelectorAll('.accordion-item');
+        const isOpen = li.classList.contains('open');
+        all.forEach(it => it.classList.remove('open'));
+        if(!isOpen){
+          li.classList.add('open');
+        }
+      });
+
+      list.appendChild(li);
+    });
+  }
+
+  function refresh(){
+    renderLayers();
+    updateControlsUI();
+    updateVisibleList();
+    updatePeriodPanel();
+  }
+
+  $('year').addEventListener('input', e => {
+    state.year = parseInt(e.target.value,10);
+    refresh();
+  });
+  $('showAllYears').addEventListener('change', e => {
+    state.showAllYears = e.target.checked;
+    refresh();
+  });
+  $('layerTribes').addEventListener('change', e => {
+    state.layerTribes = e.target.checked;
+    refresh();
+  });
+  $('layerSites').addEventListener('change', e => {
+    state.layerSites = e.target.checked;
+    refresh();
+  });
+  $('layerContacts').addEventListener('change', e => {
+    state.layerContacts = e.target.checked;
+    refresh();
+  });
+  $('filter').addEventListener('input', e => {
+    state.filter = e.target.value;
+    refresh();
+  });
+
+  renderTimeline();
+  refresh();
+  </script>
+
+  <script>
+  /* Cuando estamos dentro de un iframe, enviamos al padre la altura real
+     del contenido. Se reenvía cuando cambia el tamaño de la ventana o cuando
+     el contenido se redibuja (por ejemplo al desplegar acordeones). */
+  (function () {
+    if (window.parent === window) return;   // no hacemos nada si abrimos suelto
+
+    function sendHeight() {
+      var h = Math.max(
+        document.documentElement.scrollHeight,
+        document.body.scrollHeight
+      );
+      window.parent.postMessage({ type: 'mapa-altura', height: h }, '*');
+    }
+
+    // Envío inicial tras render completo
+    window.addEventListener('load', sendHeight);
+    // En cambios de tamaño de la ventana del visor
+    window.addEventListener('resize', sendHeight);
+    // Cuando el contenido cambia (acordeones, listas, etc.)
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(sendHeight).observe(document.body);
+    }
+    // Primera medición rápida
+    setTimeout(sendHeight, 200);
+  })();
+  </script>
+</body>
+</html>
