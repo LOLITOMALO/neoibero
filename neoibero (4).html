@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neoíbero — Lengua reconstruida de la Iberia prerromana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Iberia Georgeos';src:url('Iberia-Georgeos.ttf') format('truetype');font-display:swap}
+@font-face{font-family:'Norse';src:url('Norse-KaWl.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'Norse';src:url('NorseBold-2Kge.otf') format('opentype');font-weight:700;font-display:swap}
+:root{
+  --clay:#8B4513;--ochre:#CC7722;--stone:#2c2c2c;--sand:#D2B48C;--rust:#A0522D;
+  --bronze:#CD7F32;--accent:#d4a574;
+  --cream-1:#f8f5f0;--cream-2:#f3efe8;--cream-3:#eee9e0;--cream-4:#e8e2d8;
+  --dark:#1a1410;--dark-2:#2c2416;--dark-3:#3d3226;
+  --text:#3d3226;--text-2:#6b5d4f;--text-3:#9a8b7a;
+  --ff-display:'Playfair Display',Georgia,serif;
+  --ff-body:'Cormorant Garamond',Georgia,serif;
+  --max-w:1200px;--gap:clamp(20px,3vw,32px);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:var(--ff-body);color:var(--text);line-height:1.7;font-size:18px;overflow-x:hidden;background:var(--cream-1);-webkit-font-smoothing:antialiased}
+a{color:var(--bronze);text-decoration:none}a:hover{text-decoration:underline}
+
+/* ═══ NAV — minimal with hamburger ═══ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:9999;transition:all .4s cubic-bezier(.16,1,.3,1)}
+.nav.scrolled{background:rgba(26,20,16,.95);backdrop-filter:blur(20px) saturate(1.4);box-shadow:0 1px 0 rgba(212,165,116,.15)}
+.nav-inner{max-width:var(--max-w);margin:0 auto;padding:0 var(--gap);display:flex;align-items:center;justify-content:space-between;height:72px}
+.nav-logo{font-family:'Iberia Georgeos',var(--ff-display);font-size:22px;color:var(--accent);cursor:pointer;transition:opacity .2s;letter-spacing:1px}
+.nav-logo:hover{opacity:.7;text-decoration:none}
+
+/* Hamburger button */
+.hamburger{background:none;border:none;cursor:pointer;padding:8px;display:flex;flex-direction:column;gap:5px;z-index:10001}
+.hamburger span{display:block;width:24px;height:2px;background:rgba(248,245,240,.85);border-radius:2px;transition:all .3s cubic-bezier(.16,1,.3,1)}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
+
+/* Slide-out menu */
+.menu-overlay{position:fixed;inset:0;background:rgba(14,11,8,.5);backdrop-filter:blur(4px);z-index:10000;opacity:0;pointer-events:none;transition:opacity .3s ease}
+.menu-overlay.open{opacity:1;pointer-events:auto}
+.menu-panel{position:fixed;top:0;right:0;width:min(380px,85vw);height:100vh;background:#1a1410;z-index:10001;transform:translateX(100%);transition:transform .4s cubic-bezier(.16,1,.3,1);display:flex;flex-direction:column;padding:100px 48px 48px}
+.menu-panel.open{transform:translateX(0)}
+.menu-link{font-family:var(--ff-display);font-size:28px;font-weight:600;color:rgba(248,245,240,.7);padding:16px 0;border:none;background:none;cursor:pointer;text-align:left;transition:all .2s;border-bottom:1px solid rgba(212,165,116,.08);display:flex;align-items:center;gap:16px;letter-spacing:-.5px}
+.menu-link:hover{color:#fff;padding-left:12px}
+.menu-link .menu-icon{font-size:18px;opacity:.5;width:28px;text-align:center}
+.menu-label{font-size:12px;text-transform:uppercase;letter-spacing:3px;color:var(--bronze);margin-bottom:24px;font-family:var(--ff-body);font-weight:600}
+
+/* ═══ HERO ═══ */
+#inicio{min-height:100vh;display:flex;align-items:flex-start;justify-content:center;position:relative;overflow:hidden;background:#0e0b08;color:#fff;padding-top:140px}
+.hero-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(14,11,8,.6) 0%,rgba(14,11,8,.4) 40%,rgba(14,11,8,.75) 100%),url('bosque.jpg') center/cover no-repeat}
+.hero-grain{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:.4;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E")}
+.hero-glow{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse 50% 50% at 30% 70%,rgba(205,127,50,.18) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 75% 25%,rgba(139,69,19,.12) 0%,transparent 60%)}
+.hero-meander{position:absolute;left:0;right:0;bottom:0;height:4px;z-index:5;background:repeating-linear-gradient(90deg,var(--bronze) 0,var(--bronze) 14px,transparent 14px,transparent 20px,var(--ochre) 20px,var(--ochre) 34px,transparent 34px,transparent 40px);opacity:.5}
+.hero-ghost{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;font-family:'Iberia Georgeos',serif;font-size:clamp(140px,22vw,320px);color:rgba(212,165,116,.04);white-space:nowrap;user-select:none;pointer-events:none}
+
+.hero-inner{position:relative;z-index:3;text-align:center;max-width:900px;padding:0 var(--gap)}
+.hero-eyebrow{font-family:var(--ff-body);font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:4px;color:var(--bronze);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:20px}
+.hero-eyebrow::before,.hero-eyebrow::after{content:'';width:40px;height:1px;background:var(--bronze);opacity:.6}
+.hero-title{font-family:'Norse',var(--ff-display);font-size:clamp(72px,13vw,170px);font-weight:700;line-height:.88;letter-spacing:2px;margin-bottom:10px;color:#fff;text-shadow:0 4px 60px rgba(0,0,0,.4);text-transform:uppercase}
+.hero-subtitle{font-family:var(--ff-display);font-size:clamp(24px,3.5vw,42px);font-weight:400;font-style:italic;color:rgba(255,255,255,.6);letter-spacing:.5px;margin-bottom:24px}
+.hero-desc{font-size:clamp(19px,2.2vw,24px);color:rgba(255,255,255,.7);max-width:560px;margin:0 auto 0;line-height:1.65}
+
+/* Scroll hint */
+.scroll-hint{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:5}
+.scroll-arrow{width:20px;height:20px;border-right:1.5px solid rgba(255,255,255,.3);border-bottom:1.5px solid rgba(255,255,255,.3);transform:rotate(45deg);animation:bounce 2s ease infinite}
+@keyframes bounce{0%,100%{transform:rotate(45deg) translate(0);opacity:.2}50%{transform:rotate(45deg) translate(5px,5px);opacity:.6}}
+
+/* ═══ FEATURE CARDS — inside hero ═══ */
+.features-inner{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:20px;
+  margin:32px auto 0;max-width:680px;
+}
+.feat-card{
+  background:var(--cream-1);
+  border:1px solid var(--sand);
+  border-radius:14px;padding:24px 20px;
+  text-align:center;cursor:pointer;
+  transition:all .35s cubic-bezier(.16,1,.3,1);
+  text-decoration:none;display:block;
+  box-shadow:0 4px 16px rgba(0,0,0,.2);
+}
+.feat-card:hover{
+  background:#fff;
+  border-color:var(--bronze);
+  transform:translateY(-6px);
+  box-shadow:0 12px 40px rgba(0,0,0,.35);
+  text-decoration:none;
+}
+.feat-icon{
+  width:48px;height:48px;margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:11px;
+  background:rgba(139,69,19,.08);
+  border:1px solid rgba(139,69,19,.12);
+}
+.feat-icon svg{width:24px;height:24px;stroke:var(--clay);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.feat-title{font-family:'Norse',var(--ff-display);font-size:18px;font-weight:700;color:var(--clay);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.feat-desc{font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:var(--text-2);line-height:1.5}
+.feat-arrow{margin-top:14px;font-family:system-ui,-apple-system,sans-serif;font-size:13px;color:var(--bronze);font-weight:600;letter-spacing:.5px;opacity:0;transform:translateY(4px);transition:all .3s}
+.feat-card:hover .feat-arrow{opacity:1;transform:translateY(0)}
+
+/* ═══ SECTIONS ═══ */
+.section{padding:clamp(80px,12vh,140px) var(--gap);position:relative}
+.section-inner{max-width:var(--max-w);margin:0 auto}
+.section-label{font-family:var(--ff-body);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:2.5px;color:var(--bronze);margin-bottom:16px;display:block}
+.section-title{font-family:'Norse',var(--ff-display);font-size:clamp(32px,5vw,52px);font-weight:700;color:var(--clay);line-height:1.12;letter-spacing:1px;margin-bottom:16px;text-transform:uppercase}
+.section-sub{font-family:var(--ff-body);font-size:clamp(17px,2vw,20px);color:var(--text-2);max-width:640px;line-height:1.6;font-style:italic}
+.section-divider{width:48px;height:2px;background:linear-gradient(90deg,var(--bronze),var(--sand));margin:24px 0 0;border:none;border-radius:1px}
+.lead-prose{max-width:760px;margin-top:30px;color:var(--text-2);font-size:20px}
+.lead-prose p+p{margin-top:14px}
+
+#traductor{background:var(--cream-1)}
+.translator-frame{background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,.04),0 20px 40px rgba(139,69,19,.08);overflow:hidden;margin-top:40px}
+.translator-frame iframe{width:100%;height:70vh;min-height:560px;border:none;display:block}
+
+#mapa{background:var(--cream-2)}
+.map-frame{background:#fff;border-radius:16px;box-shadow:0 4px 6px rgba(0,0,0,.04),0 20px 40px rgba(139,69,19,.08);overflow:hidden;margin-top:40px}
+.map-frame iframe{width:100%;height:70vh;min-height:560px;border:none;display:block}
+.map-link{text-align:center;margin-top:16px;font-size:14px;color:var(--text-3)}
+
+#lengua{background:var(--cream-3)}
+.lang-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:20px;margin-top:28px}
+.lang-card{background:#fff;border-radius:14px;padding:32px;box-shadow:0 2px 4px rgba(0,0,0,.03),0 8px 20px rgba(139,69,19,.06);transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s ease,border-left-color .3s;border-left:3px solid transparent}
+.lang-card:hover{transform:translateY(-4px);box-shadow:0 12px 35px rgba(139,69,19,.1);border-left-color:var(--bronze)}
+.lang-card h3{font-family:var(--ff-display);font-size:22px;font-weight:700;color:var(--clay);margin-bottom:12px}
+.lang-card p{font-size:16px;color:var(--text-2);line-height:1.7}
+.lang-bridge{margin-top:26px;max-width:720px;font-size:19px;color:var(--text-2);font-style:italic}
+.conj-wrap{margin-top:40px;background:#fff;border-radius:14px;padding:36px;box-shadow:0 2px 4px rgba(0,0,0,.03),0 8px 20px rgba(139,69,19,.06);overflow-x:auto}
+.conj-wrap h3{font-family:var(--ff-display);font-size:22px;font-weight:700;color:var(--clay);margin-bottom:20px}
+.conj-table{width:100%;border-collapse:collapse;font-size:15px}
+.conj-table thead th{text-align:left;padding:12px 16px;font-weight:600;color:var(--clay);font-size:13px;text-transform:uppercase;letter-spacing:.8px;border-bottom:2px solid var(--sand)}
+.conj-table tbody td{padding:12px 16px;border-bottom:1px solid var(--cream-2)}
+.conj-table tbody tr:last-child td{border-bottom:none}
+.tam-label{font-weight:600;color:var(--text)}.tam-suffix{font-weight:700;color:var(--bronze);font-family:var(--ff-display);font-size:16px}
+.form{font-family:'Courier New',monospace;font-size:13.5px;color:var(--text-2);letter-spacing:.3px}
+
+#musica{background:var(--cream-4)}
+.music-placeholder{background:#fff;border-radius:14px;padding:clamp(48px,8vw,80px) 40px;box-shadow:0 2px 4px rgba(0,0,0,.03),0 8px 20px rgba(139,69,19,.06);text-align:center;margin-top:40px;position:relative;overflow:hidden}
+.music-placeholder::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0,transparent 48px,rgba(205,127,50,.03) 48px,rgba(205,127,50,.03) 49px);pointer-events:none}
+.music-icon{font-size:56px;margin-bottom:24px;opacity:.2}
+.music-placeholder h3{font-family:var(--ff-display);font-size:28px;font-weight:700;color:var(--clay);margin-bottom:12px;position:relative}
+.music-placeholder p{font-size:17px;color:var(--text-3);max-width:520px;margin:0 auto;line-height:1.65;position:relative}
+.music-sample{margin-top:22px;padding-top:20px;border-top:1px solid rgba(139,69,19,.08);color:var(--text-2);font-size:17px;font-style:italic;position:relative}
+
+.footer{background:var(--dark);color:rgba(248,245,240,.4);padding:48px var(--gap);text-align:center;font-size:15px;line-height:1.8}
+.footer-logo{font-family:'Norse',var(--ff-display);font-size:26px;font-weight:700;color:var(--accent);margin-bottom:12px;letter-spacing:2px;text-transform:uppercase}
+.footer a{color:var(--accent)}
+.footer-sep{display:inline-block;width:3px;height:3px;background:var(--bronze);border-radius:50%;margin:0 12px;vertical-align:middle;opacity:.5}
+
+/* ═══ ANIMATIONS ═══ */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}.reveal-delay-2{transition-delay:.2s}.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}.reveal-delay-5{transition-delay:.5s}
+.hero-reveal{opacity:0;transition:opacity 1s cubic-bezier(.16,1,.3,1),transform 1s cubic-bezier(.16,1,.3,1)}
+.hero-reveal.visible{opacity:1;transform:none}
+.hr-1{transform:translateY(-20px);transition-delay:.3s}
+.hr-2{transform:translateY(50px) scale(.96);transition-delay:.5s}
+.hr-3{transform:translateY(30px);transition-delay:.8s}
+.hr-4{transform:translateY(25px);transition-delay:1s}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:900px){
+  .features-inner{max-width:500px}
+}
+@media(max-width:520px){
+  .features-inner{grid-template-columns:1fr;gap:12px}
+  .hero-ghost{font-size:100px}
+  .hero-title{letter-spacing:0}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav" id="mainNav"><div class="nav-inner">
+  <a href="#inicio" class="nav-logo">DNINMOR · TGTXEM</a>
+  <button class="hamburger" id="menuBtn" aria-label="Menú">
+    <span></span><span></span><span></span>
+  </button>
+</div></nav>
+
+<!-- Menu overlay + panel -->
+<div class="menu-overlay" id="menuOverlay"></div>
+<div class="menu-panel" id="menuPanel">
+  <div class="menu-label">Navegación</div>
+  <button class="menu-link" data-target="inicio"><span class="menu-icon">⛩</span> Inicio</button>
+  <button class="menu-link" data-target="traductor"><span class="menu-icon">⟷</span> Traductor</button>
+  <button class="menu-link" data-target="mapa"><span class="menu-icon">◎</span> Mapa</button>
+  <button class="menu-link" data-target="lengua"><span class="menu-icon">𐀀</span> La Lengua</button>
+  <button class="menu-link" data-target="musica"><span class="menu-icon">♫</span> Música</button>
+</div>
+
+<!-- ═══ HERO ═══ -->
+<section class="section" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grain"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-ghost" aria-hidden="true">DNINMOR·TGTXEM</div>
+  <div class="hero-meander"></div>
+
+  <div class="hero-inner">
+    <div class="hero-eyebrow hero-reveal hr-1">Conlang · Iberia prerromana</div>
+    <h1 class="hero-title hero-reveal hr-2">Neoíbero</h1>
+    <p class="hero-subtitle hero-reveal hr-3">La lengua que pudo haber sido</p>
+    <p class="hero-desc hero-reveal hr-4">
+      Reconstruida desde la epigrafía paleohispánica,
+      los contactos fenicio-griegos y la tipología vasca.
+    </p>
+
+    <!-- Feature cards as primary navigation -->
+    <div class="features-inner hero-reveal" style="transition-delay:1.1s">
+      <a href="#traductor" class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 7h7M7 4v3m0 0c0 3-2 6-5 8m5-8c0 3 2 6 5 8"/><path d="M13 20l3-8 3 8m-5.5-3h5"/></svg>
+        </div>
+        <div class="feat-title">Traductor</div>
+        <div class="feat-desc">702.835 pares español ↔ neoíbero</div>
+        <div class="feat-arrow">Explorar →</div>
+      </a>
+      <a href="#mapa" class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 7l6-3 6 3 6-3v13l-6 3-6-3-6 3z"/><path d="M9 4v13m6-10v13"/></svg>
+        </div>
+        <div class="feat-title">Mapa Íbero</div>
+        <div class="feat-desc">Tribus y oppida del 800 a.C. al 100 d.C.</div>
+        <div class="feat-arrow">Explorar →</div>
+      </a>
+      <a href="#lengua" class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 19V5a2 2 0 012-2h8l6 6v10a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>
+        </div>
+        <div class="feat-title">La Lengua</div>
+        <div class="feat-desc">Morfología, TAMs y semisilabario</div>
+        <div class="feat-arrow">Explorar →</div>
+      </a>
+      <a href="#musica" class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        </div>
+        <div class="feat-title">Música</div>
+        <div class="feat-desc">Canciones en neoíbero</div>
+        <div class="feat-arrow">Explorar →</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="scroll-hint"><div class="scroll-arrow"></div></div>
+</section>
+
+<!-- ═══ TRADUCTOR ═══ -->
+<section class="section" id="traductor"><div class="section-inner">
+  <span class="section-label reveal">Español ↔ Neoíbero</span>
+  <h2 class="section-title reveal reveal-delay-1">Traductor</h2>
+  <p class="section-sub reveal reveal-delay-2">CSV estricto, bidireccional 1:1. Incluye escritura ibérica y locución fonética.</p>
+  <hr class="section-divider reveal reveal-delay-2">
+  <div class="translator-frame reveal reveal-delay-3">
+    <iframe src="https://lolosemper-spanish-neoiberianewdesign.hf.space" title="Traductor Español ↔ Neoíbero" loading="lazy" allow="microphone"></iframe>
+  </div>
+</div></section>
+
+<!-- ═══ MAPA ═══ -->
+<section class="section" id="mapa"><div class="section-inner">
+  <span class="section-label reveal">Explorador interactivo</span>
+  <h2 class="section-title reveal reveal-delay-1">Pueblos Íberos</h2>
+  <p class="section-sub reveal reveal-delay-2">Tribus, oppida y contactos mediterráneos desde el 800 a.C. hasta el 100 d.C.</p>
+  <hr class="section-divider reveal reveal-delay-2">
+  <div class="map-frame reveal reveal-delay-3">
+    <iframe src="https://lolosemper.github.io/mapa-neoibero/" title="Mapa de los Pueblos Íberos" loading="lazy"></iframe>
+  </div>
+  <p class="map-link reveal reveal-delay-4"><a href="https://lolosemper.github.io/mapa-neoibero/" target="_blank" rel="noopener">Abrir en pantalla completa ↗</a></p>
+</div></section>
+
+<!-- ═══ LENGUA ═══ -->
+<section class="section" id="lengua"><div class="section-inner">
+  <span class="section-label reveal">Gramática y fonología</span>
+  <h2 class="section-title reveal reveal-delay-1">Cómo funciona el neoíbero</h2>
+  <p class="section-sub reveal reveal-delay-2">Una lengua construida a partir de raíces, sufijos y una lógica interna deliberadamente clara.</p>
+  <hr class="section-divider reveal reveal-delay-2">
+  <div class="lead-prose reveal reveal-delay-3">
+    <p>El neoíbero no se plantea como una reconstrucción filológica exacta del ibero histórico, sino como una lengua plausible inspirada en él. Su estructura busca equilibrio entre naturalidad y sistema: raíces reconocibles, sufijos estables y una sintaxis clara.</p>
+    <p>La idea central es simple: una raíz aporta el significado básico y los sufijos añaden tiempo, función o derivación. Eso permite construir palabras y frases de forma coherente, sin una acumulación innecesaria de irregularidades.</p>
+  </div>
+  <div class="lang-grid">
+    <div class="lang-card reveal"><h3>Fonología</h3><p>15 consonantes y 5 vocales. La <em>ś</em> representa una sibilante palatal y la <em>ŕ</em> una vibrante múltiple, dos rasgos que dan al idioma una identidad sonora propia.</p></div>
+    <div class="lang-card reveal reveal-delay-1"><h3>Morfología verbal</h3><p>El verbo se organiza como raíz + TAM + persona. Ese esquema permite conjugar de manera regular y legible, con marcas claras para presente, pasado, futuro, condicional o subjuntivo.</p></div>
+  </div>
+  <p class="lang-bridge reveal reveal-delay-2">La lengua intenta ser compleja donde conviene y simple donde es útil: suficiente riqueza para resultar expresiva, suficiente regularidad para que pueda aprenderse y usarse.</p>
+  <div class="lang-grid">
+    <div class="lang-card reveal"><h3>Derivación</h3><p>Sufijos como <em>-tun</em>, <em>-ar</em>, <em>-eŕ</em>, <em>-si</em> o <em>-ŕa</em> permiten generar familias léxicas enteras a partir de una misma raíz.</p></div>
+    <div class="lang-card reveal reveal-delay-1"><h3>Modalidad</h3><p>Marcadores finales como <em>-na</em> para la interrogación o <em>-ba</em> para la exclamación recogen una lógica inspirada en la tipología vasca y refuerzan la musicalidad del idioma.</p></div>
+  </div>
+  <div class="conj-wrap reveal">
+    <h3>Conjugación de <em>niśnal</em> (hablar)</h3>
+    <table class="conj-table">
+      <thead><tr><th>TAM</th><th>Sufijo</th><th>Yo</th><th>Él / ella</th><th>Nosotros</th></tr></thead>
+      <tbody>
+        <tr><td class="tam-label">Presente</td><td class="tam-suffix">-ke</td><td class="form">niśnal-ke-n</td><td class="form">niśnal-ke</td><td class="form">niśnal-ke-gu</td></tr>
+        <tr><td class="tam-label">Pasado</td><td class="tam-suffix">-bo</td><td class="form">niśnal-bo-n</td><td class="form">niśnal-bo</td><td class="form">niśnal-bo-gu</td></tr>
+        <tr><td class="tam-label">Futuro</td><td class="tam-suffix">-ta</td><td class="form">niśnal-ta-n</td><td class="form">niśnal-ta</td><td class="form">niśnal-ta-gu</td></tr>
+        <tr><td class="tam-label">Condicional</td><td class="tam-suffix">-tei</td><td class="form">niśnal-tei-n</td><td class="form">niśnal-tei</td><td class="form">niśnal-tei-gu</td></tr>
+        <tr><td class="tam-label">Subjuntivo</td><td class="tam-suffix">-na</td><td class="form">niśnal-na-n</td><td class="form">niśnal-na</td><td class="form">niśnal-na-gu</td></tr>
+        <tr><td class="tam-label">Subj. imperf.</td><td class="tam-suffix">-nabo</td><td class="form">niśnal-nabo-n</td><td class="form">niśnal-nabo</td><td class="form">niśnal-nabo-gu</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div></section>
+
+<!-- ═══ MÚSICA ═══ -->
+<section class="section" id="musica"><div class="section-inner">
+  <span class="section-label reveal">Próximamente</span>
+  <h2 class="section-title reveal reveal-delay-1">Música en Neoíbero</h2>
+  <p class="section-sub reveal reveal-delay-2">Canciones interpretadas en la lengua reconstruida.</p>
+  <hr class="section-divider reveal reveal-delay-2">
+  <div class="music-placeholder reveal reveal-delay-3">
+    <div class="music-icon">♫</div>
+    <h3>En preparación</h3>
+    <p>Estamos componiendo canciones en neoíbero. Escucharás cómo podría haber sonado una tradición musical en una lengua de raíz ibérica, adaptada a una prosodia nueva pero verosímil.</p>
+    <div class="music-sample">Ejemplo futuro: versos, letra comentada y posiblemente una primera pieza de muestra dentro de la propia página.</div>
+  </div>
+</div></section>
+
+<footer class="footer">
+  <div class="footer-logo">Neoíbero</div>
+  <div>Lengua construida basada en la epigrafía paleohispánica</div>
+  <div style="margin-top:8px">
+    <a href="https://huggingface.co/spaces/LoloSemper/Spanish_NeoIberianNewDesign" target="_blank" rel="noopener">HuggingFace</a>
+    <span class="footer-sep"></span>
+    <a href="https://lolosemper.github.io/mapa-neoibero/" target="_blank" rel="noopener">GitHub Pages</a>
+  </div>
+</footer>
+
+<script>
+/* Scroll reveal */
+const ro=new IntersectionObserver(e=>{e.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');ro.unobserve(e.target)}})},{threshold:.08,rootMargin:'0px 0px -30px 0px'});
+document.querySelectorAll('.reveal,.hero-reveal').forEach(el=>ro.observe(el));
+
+/* Nav scroll effect */
+addEventListener('scroll',()=>{document.getElementById('mainNav').classList.toggle('scrolled',scrollY>40)},{passive:true});
+
+/* Hamburger menu */
+const menuBtn=document.getElementById('menuBtn');
+const menuPanel=document.getElementById('menuPanel');
+const menuOverlay=document.getElementById('menuOverlay');
+
+function toggleMenu(){
+  const open=menuPanel.classList.toggle('open');
+  menuOverlay.classList.toggle('open');
+  menuBtn.classList.toggle('open');
+  document.body.style.overflow=open?'hidden':'';
+}
+function closeMenu(){
+  menuPanel.classList.remove('open');
+  menuOverlay.classList.remove('open');
+  menuBtn.classList.remove('open');
+  document.body.style.overflow='';
+}
+menuBtn.addEventListener('click',toggleMenu);
+menuOverlay.addEventListener('click',closeMenu);
+
+/* Menu links → smooth scroll */
+document.querySelectorAll('.menu-link').forEach(l=>{
+  l.addEventListener('click',()=>{
+    closeMenu();
+    setTimeout(()=>{
+      document.getElementById(l.dataset.target)?.scrollIntoView({behavior:'smooth'});
+    },300);
+  });
+});
+</script>
+</body>
+</html>
