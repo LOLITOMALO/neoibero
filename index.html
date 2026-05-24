@@ -1163,6 +1163,129 @@ body[data-menu="stelae"] .feat-iber{
   body[data-menu="stelae"] .feat-icon{width:68px;height:68px}
   body[data-menu="stelae"] .feat-title{font-size:20px;letter-spacing:2.5px}
 }
+
+/* ===== CARRUSEL LENGUA ===== */
+/* ░░░ Carrusel de la lengua ░░░ */
+.lang-carousel{margin-top:30px}
+.ni{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;color:var(--clay);letter-spacing:.3px;font-style:normal}
+
+/* Nodos superiores */
+.lc-nodes{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:22px}
+.lc-node{appearance:none;border:none;cursor:pointer;width:13px;height:13px;border-radius:50%;
+  background:var(--cream-4);box-shadow:inset 0 0 0 2px var(--sand);padding:0;
+  transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s,box-shadow .3s;position:relative}
+.lc-node:hover{transform:scale(1.25);background:var(--accent)}
+.lc-node.active{background:linear-gradient(135deg,var(--bronze),var(--rust));box-shadow:inset 0 0 0 2px var(--clay),0 2px 8px rgba(139,69,19,.35);transform:scale(1.2)}
+.lc-node:focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+
+/* Viewport + pista */
+.lc-viewport{position:relative;display:flex;align-items:center;gap:8px}
+.lc-track{flex:1;overflow:hidden;border-radius:18px}
+.lc-slide{width:100%}
+.lc-slide[hidden]{display:none}
+
+/* Tarjeta */
+.lc-card{background:#fff;border-radius:18px;padding:clamp(26px,3.4vw,42px);
+  box-shadow:0 2px 4px rgba(0,0,0,.03),0 14px 32px rgba(139,69,19,.09);
+  border-top:4px solid var(--bronze);min-height:330px;
+  animation:lcFade .5s cubic-bezier(.16,1,.3,1)}
+@keyframes lcFade{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.lc-kicker{font-family:var(--ff-ui);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:3px;color:var(--bronze);display:block;margin-bottom:8px}
+.lc-card h3{font-family:'NorseBold','Norse',var(--ff-display);font-size:clamp(22px,2.6vw,30px);color:var(--clay);letter-spacing:1.5px;text-transform:uppercase;line-height:1.15;margin-bottom:16px}
+.lc-card p{font-family:var(--ff-body);font-size:clamp(16px,1.7vw,19px);line-height:1.62;color:var(--text);margin-bottom:12px}
+.lc-card p:last-child{margin-bottom:0}
+.lc-card em{font-style:italic;color:var(--rust)}
+.lc-card strong{font-weight:600;color:var(--dark-2)}
+.lc-note{font-style:italic;color:var(--text-2);font-size:clamp(14px,1.5vw,16px)!important;
+  border-left:3px solid var(--ochre);padding-left:14px;margin-top:16px!important}
+
+/* Listas */
+.lc-list{list-style:none;margin:6px 0 0;padding:0}
+.lc-list li{font-family:var(--ff-body);font-size:clamp(16px,1.7vw,18px);line-height:1.55;color:var(--text);
+  padding:7px 0 7px 22px;position:relative;border-bottom:1px solid var(--cream-3)}
+.lc-list li:last-child{border-bottom:none}
+.lc-list li::before{content:'◆';position:absolute;left:0;top:7px;color:var(--bronze);font-size:11px}
+
+/* Tablas */
+.lc-table{width:100%;border-collapse:collapse;font-size:clamp(14px,1.5vw,16px);margin-top:6px}
+.lc-table th{font-family:var(--ff-ui);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;
+  color:#fff;background:var(--clay);text-align:left;padding:9px 12px}
+.lc-table th:first-child{border-radius:8px 0 0 0}.lc-table th:last-child{border-radius:0 8px 0 0}
+.lc-table td{padding:8px 12px;border-bottom:1px solid var(--cream-3);font-family:var(--ff-body);color:var(--text)}
+.lc-table td.ni{font-family:'Cormorant Garamond',Georgia,serif;color:var(--clay)}
+.lc-table tr:last-child td{border-bottom:none}
+.lc-table tbody tr:nth-child(even){background:var(--cream-1)}
+.lc-table tr.hl td{background:linear-gradient(90deg,rgba(205,127,50,.14),rgba(205,127,50,.04))}
+.lc-table tr.hl td:first-child{font-weight:600;color:var(--rust)}
+
+/* Chips */
+.lc-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.chip{font-family:var(--ff-body);font-size:clamp(14px,1.6vw,17px);color:var(--text);
+  background:var(--cream-2);border:1px solid var(--cream-4);border-radius:999px;padding:7px 15px;display:inline-flex;gap:7px;align-items:baseline}
+.chip b{font-family:'Cormorant Garamond',Georgia,serif;color:var(--clay)}
+
+/* Números */
+.lc-nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:10px;margin:6px 0 4px}
+.lc-nums span{background:var(--cream-1);border:1px solid var(--cream-4);border-radius:10px;
+  padding:11px 8px;text-align:center;font-family:var(--ff-body)}
+.lc-nums b{display:block;color:var(--bronze);font-family:var(--ff-ui);font-weight:600;font-size:13px}
+.lc-nums i{font-family:'Cormorant Garamond',Georgia,serif;color:var(--clay);font-style:normal;font-size:18px}
+
+/* Frases */
+.lc-phrases{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:10px}
+.lc-phrases li{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;
+  padding:11px 16px;background:var(--cream-1);border-radius:10px;border-left:3px solid var(--bronze)}
+.lc-phrases .ni{font-size:clamp(16px,1.8vw,19px)}
+.lc-phrases em{font-style:italic;color:var(--text-2);font-family:var(--ff-body)}
+
+/* Flechas */
+.lc-arrow{flex:0 0 auto;width:52px;height:52px;border-radius:50%;cursor:pointer;
+  background:#fff;color:var(--clay);border:1px solid var(--cream-4);
+  display:grid;place-items:center;box-shadow:0 4px 14px rgba(139,69,19,.14);
+  transition:transform .28s cubic-bezier(.16,1,.3,1),background .28s,color .28s,box-shadow .28s}
+.lc-arrow:hover{background:linear-gradient(135deg,var(--bronze),var(--rust));color:#fff;transform:scale(1.08);box-shadow:0 6px 18px rgba(139,69,19,.3)}
+.lc-arrow:active{transform:scale(.96)}
+.lc-arrow:focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+
+/* Contador */
+.lc-counter{text-align:center;margin-top:18px;font-family:var(--ff-ui);font-size:13px;letter-spacing:2px;color:var(--bronze);font-weight:600}
+.lc-counter #lcCurrent{color:var(--clay);font-size:16px}
+.lc-counter .lc-sep{opacity:.5;margin:0 4px}
+
+/* Responsive */
+
+/* Botones de descarga */
+.lang-downloads{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;margin-top:38px}
+.dl-btn{display:inline-flex;align-items:center;gap:14px;text-decoration:none;
+  padding:16px 26px;border-radius:14px;min-width:280px;
+  font-family:var(--ff-ui);transition:transform .3s cubic-bezier(.16,1,.3,1),box-shadow .3s,background .3s,color .3s}
+.dl-btn svg{flex:0 0 auto}
+.dl-text{display:flex;flex-direction:column;line-height:1.25;text-align:left}
+.dl-text b{font-weight:600;font-size:16px;letter-spacing:.3px}
+.dl-text i{font-style:normal;font-size:12.5px;opacity:.85;letter-spacing:.4px;margin-top:2px}
+.dl-primary{background:linear-gradient(135deg,var(--bronze),var(--rust));color:#fff;
+  box-shadow:0 6px 18px rgba(139,69,19,.28),inset 0 1px 0 rgba(255,255,255,.2);border:1px solid var(--clay)}
+.dl-primary:hover{transform:translateY(-3px);box-shadow:0 10px 26px rgba(139,69,19,.38);
+  background:linear-gradient(135deg,#fffdf9,var(--cream-2));color:var(--clay);text-decoration:none}
+.dl-primary:hover .dl-text i{opacity:1}
+.dl-primary:active{transform:translateY(-1px)}
+.dl-primary:focus-visible{outline:2px solid var(--clay);outline-offset:3px}
+.dl-soon{background:var(--cream-2);color:var(--text-2);border:1px dashed var(--sand);cursor:not-allowed;opacity:.78}
+.dl-soon:hover{transform:none}
+.dl-soon .dl-text i{color:var(--bronze);opacity:1;font-weight:600}
+@media (max-width:640px){
+  .lang-downloads{flex-direction:column;align-items:stretch}
+  .dl-btn{min-width:0;justify-content:flex-start}
+}
+
+@media (max-width:640px){
+  .lc-table{display:block;overflow-x:auto;white-space:nowrap}
+  .lc-arrow{width:42px;height:42px}
+  .lc-card{min-height:300px;padding:24px}
+  .lc-nodes{gap:8px}
+  .lc-node{width:11px;height:11px}
+}
+
 </style>
 </head>
 <body data-menu="stelae">
@@ -1266,35 +1389,251 @@ body[data-menu="stelae"] .feat-iber{
 <section class="section" id="lengua" data-screen-label="04 Lengua"><div class="section-inner">
   <span class="section-label reveal">Gramática y fonología</span>
   <h2 class="section-title reveal reveal-delay-1">Cómo funciona el neoíbero</h2>
-  <p class="section-sub reveal reveal-delay-2">Una lengua construida a partir de raíces, sufijos y una lógica interna deliberadamente clara.</p>
+  <p class="section-sub reveal reveal-delay-2">Un recorrido por las doce claves del idioma: raíces, sufijos y una lógica interna deliberadamente regular.</p>
   <hr class="section-divider reveal reveal-delay-2">
-  <div class="lead-prose reveal reveal-delay-3">
-    <p>El neoíbero no se plantea como una reconstrucción filológica exacta del ibero histórico, sino como una lengua plausible inspirada en él. Su estructura busca equilibrio entre naturalidad y sistema: raíces reconocibles, sufijos estables y una sintaxis clara.</p>
-    <p>La idea central es simple: una raíz aporta el significado básico y los sufijos añaden tiempo, función o derivación. Eso permite construir palabras y frases de forma coherente, sin una acumulación innecesaria de irregularidades.</p>
+
+  <!-- ░░░ CARRUSEL DE LA LENGUA ░░░ -->
+  <div class="lang-carousel reveal reveal-delay-3" id="langCarousel" aria-roledescription="carrusel" aria-label="Resumen de gramática del neoíbero">
+
+    <!-- Nodos superiores -->
+    <div class="lc-nodes" id="lcNodes" role="tablist" aria-label="Capítulos"></div>
+
+    <!-- Pista -->
+    <div class="lc-viewport">
+      <button class="lc-arrow lc-prev" id="lcPrev" aria-label="Capítulo anterior" type="button">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M15 4 L7 12 L15 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+
+      <div class="lc-track" id="lcTrack">
+
+        <!-- 1 · Qué es -->
+        <article class="lc-slide" role="tabpanel" aria-label="1 de 12">
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 01</span>
+            <h3>¿Qué es el neoíbero?</h3>
+            <p>Una <em>lengua construida</em> inspirada en el íbero prerromano del este y sureste peninsular. No es una reconstrucción filológica exacta, sino una lengua plausible que respeta lo que sabemos de la epigrafía paleohispánica.</p>
+            <p>Su estructura es <strong>aglutinante</strong>: las palabras se forman añadiendo sufijos a una raíz, y los verbos se conjugan de forma completamente regular, sin excepciones.</p>
+          </div>
+        </article>
+
+        <!-- 2 · Sonidos y escritura -->
+        <article class="lc-slide" role="tabpanel" aria-label="2 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 02</span>
+            <h3>Sonidos y escritura</h3>
+            <p>Cinco vocales como en español (<span class="ni">a&nbsp;e&nbsp;i&nbsp;o&nbsp;u</span>). Cada letra suena siempre igual: no hay letras mudas ni dígrafos.</p>
+            <ul class="lc-list">
+              <li>Oclusivas <span class="ni">b d t g k</span> — la <span class="ni">g</span> siempre dura, la <span class="ni">k</span> sustituye a c/qu.</li>
+              <li>Sibilantes <span class="ni">s</span> / <span class="ni">ś</span> (tipo «sh» inglesa).</li>
+              <li>Vibrantes <span class="ni">r</span> (simple) / <span class="ni">ŕ</span> (múltiple, «rr»), más <span class="ni">l m n</span>.</li>
+            </ul>
+            <p class="lc-note">El semisilabario ibérico fue descifrado en gran parte por Manuel Gómez-Moreno en 1922.</p>
+          </div>
+        </article>
+
+        <!-- 3 · Género y número -->
+        <article class="lc-slide" role="tabpanel" aria-label="3 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 03</span>
+            <h3>El nombre: género y número</h3>
+            <p>Dos géneros: <strong>masculino</strong> (sin marca) y <strong>femenino</strong> con el prefijo <span class="ni">ti-</span>. Un único marcador de plural, <span class="ni">-k</span>, válido para nombres y adjetivos.</p>
+            <table class="lc-table">
+              <thead><tr><th></th><th>Singular</th><th>Plural</th></tr></thead>
+              <tbody>
+                <tr><td>bueno / -a</td><td class="ni">ituśder</td><td class="ni">ituśder-k</td></tr>
+                <tr><td>femenino</td><td class="ni">ti-ituśder</td><td class="ni">ti-ituśder-k</td></tr>
+                <tr><td>perro / -s</td><td class="ni">nulgarser</td><td class="ni">nulgarser-k</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- 4 · Pronombres y posesivos -->
+        <article class="lc-slide" role="tabpanel" aria-label="4 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 04</span>
+            <h3>Pronombres y posesivos</h3>
+            <table class="lc-table">
+              <thead><tr><th>Español</th><th>Pronombre</th><th>Posesivo (+ -ar)</th></tr></thead>
+              <tbody>
+                <tr><td>yo / mi</td><td class="ni">nai</td><td class="ni">nai-ar</td></tr>
+                <tr><td>tú / tu</td><td class="ni">śe</td><td class="ni">śe-ar</td></tr>
+                <tr><td>él / su</td><td class="ni">nun</td><td class="ni">nun-ar</td></tr>
+                <tr><td>nosotros / nuestro</td><td class="ni">eki</td><td class="ni">eki-ar</td></tr>
+                <tr><td>vosotros / vuestro</td><td class="ni">śek</td><td class="ni">śek-ar</td></tr>
+              </tbody>
+            </table>
+            <p class="lc-note">El femenino antepone <span class="ni">ti-</span> como en todo el sistema: nuestra = <span class="ni">ti-eki-ar</span>, vuestra = <span class="ni">ti-śek-ar</span>.</p>
+          </div>
+        </article>
+
+        <!-- 5 · El verbo -->
+        <article class="lc-slide" role="tabpanel" aria-label="5 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 05</span>
+            <h3>El verbo: raíz + TAM + persona</h3>
+            <p>Toda forma verbal se construye igual y sin irregularidades. Sufijos de tiempo, aspecto y modo:</p>
+            <div class="lc-chips">
+              <span class="chip">Presente <b class="ni">-ke</b></span>
+              <span class="chip">Pasado <b class="ni">-bo</b></span>
+              <span class="chip">Futuro <b class="ni">-ta</b></span>
+              <span class="chip">Imperfecto <b class="ni">-ska</b></span>
+              <span class="chip">Condicional <b class="ni">-tei</b></span>
+              <span class="chip">Subjuntivo <b class="ni">-ni</b></span>
+              <span class="chip">Subj. imperf. <b class="ni">-nibo</b></span>
+              <span class="chip">Imperativo <b class="ni">-ka</b></span>
+              <span class="chip">Gerundio <b class="ni">-min</b></span>
+              <span class="chip">Participio <b class="ni">-ir</b></span>
+            </div>
+          </div>
+        </article>
+
+        <!-- 6 · Persona y trato formal -->
+        <article class="lc-slide" role="tabpanel" aria-label="6 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 06</span>
+            <h3>Persona y trato formal</h3>
+            <table class="lc-table">
+              <thead><tr><th>Persona</th><th>Sufijo</th><th>Ejemplo (niśnal)</th></tr></thead>
+              <tbody>
+                <tr><td>1ª sing.</td><td class="ni">-n</td><td class="ni">niśnal-ke-n</td></tr>
+                <tr><td>2ª sing. (tú)</td><td class="ni">-śe</td><td class="ni">niśnal-ke-śe</td></tr>
+                <tr><td>3ª sing.</td><td class="ni">∅</td><td class="ni">niśnal-ke</td></tr>
+                <tr class="hl"><td>usted</td><td class="ni">-ur</td><td class="ni">niśnal-ke-ur</td></tr>
+                <tr><td>1ª pl.</td><td class="ni">-ek</td><td class="ni">niśnal-ke-ek</td></tr>
+                <tr><td>2ª pl. (vosotros)</td><td class="ni">-śek</td><td class="ni">niśnal-ke-śek</td></tr>
+                <tr><td>3ª pl.</td><td class="ni">-r</td><td class="ni">niśnal-ke-r</td></tr>
+                <tr class="hl"><td>ustedes</td><td class="ni">-ur-k</td><td class="ni">niśnal-ke-ur-k</td></tr>
+              </tbody>
+            </table>
+            <p class="lc-note">Lengua <em>pro-drop</em>: el pronombre sujeto se omite cuando el verbo ya marca la persona.</p>
+          </div>
+        </article>
+
+        <!-- 7 · Negación, preguntas, exclamaciones -->
+        <article class="lc-slide" role="tabpanel" aria-label="7 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 07</span>
+            <h3>Negación, preguntas y exclamaciones</h3>
+            <p>La negación se forma con la partícula <span class="ni">eś</span> antepuesta al verbo.</p>
+            <p>La <strong>modalidad</strong> se marca con un sufijo en la última palabra de la oración:</p>
+            <ul class="lc-list">
+              <li><span class="ni">-na</span> → <strong>pregunta</strong> (reconstruye ¿…?). Ej.: <span class="ni">niśnal-ke-na</span> = «¿habla?»</li>
+              <li><span class="ni">-ba</span> → <strong>exclamación</strong> (reconstruye ¡…!).</li>
+            </ul>
+          </div>
+        </article>
+
+        <!-- 8 · Derivación -->
+        <article class="lc-slide" role="tabpanel" aria-label="8 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 08</span>
+            <h3>Derivación: familias de palabras</h3>
+            <p>Primero se deriva la raíz, después se flexiona. Una sola raíz genera familias enteras:</p>
+            <table class="lc-table">
+              <tbody>
+                <tr><td class="ni">-tun</td><td>nominalización</td><td class="ni">sukbut-tun</td></tr>
+                <tr><td class="ni">-tar</td><td>agente</td><td class="ni">sukbut-tar</td></tr>
+                <tr><td class="ni">ti-…-tar</td><td>agente fem.</td><td class="ni">ti-sukbut-tar</td></tr>
+                <tr><td class="ni">-noŕ</td><td>oficio</td><td class="ni">olat-noŕ</td></tr>
+                <tr><td class="ni">-ŕa</td><td>abstracto</td><td class="ni">mokin-ŕa</td></tr>
+                <tr><td class="ni">-bil</td><td>potencial</td><td class="ni">komlir-bil</td></tr>
+                <tr><td class="ni">-din</td><td>cargo / dominio</td><td class="ni">beśśor-din</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- 9 · Números -->
+        <article class="lc-slide" role="tabpanel" aria-label="9 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 09</span>
+            <h3>Números (sistema vigesimal)</h3>
+            <div class="lc-nums">
+              <span><b>1</b> <i class="ni">ban</i></span><span><b>2</b> <i class="ni">bi</i></span>
+              <span><b>3</b> <i class="ni">irur</i></span><span><b>4</b> <i class="ni">laur</i></span>
+              <span><b>5</b> <i class="ni">borste</i></span><span><b>6</b> <i class="ni">sei</i></span>
+              <span><b>7</b> <i class="ni">sisbi</i></span><span><b>8</b> <i class="ni">sorse</i></span>
+              <span><b>9</b> <i class="ni">bedar</i></span><span><b>10</b> <i class="ni">abar</i></span>
+            </div>
+            <p class="lc-note">Base 20: <span class="ni">orkei</span> (20), <span class="ni">atun</span> (100), <span class="ni">bekśon</span> (1000). Composición: decena + <span class="ni">-ke-</span> + unidad (<span class="ni">binorkei-ke-borste</span> = 45).</p>
+          </div>
+        </article>
+
+        <!-- 10 · Sintaxis -->
+        <article class="lc-slide" role="tabpanel" aria-label="10 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 10</span>
+            <h3>Sintaxis, preposiciones y conjunciones</h3>
+            <p>Orden básico <strong>SOV</strong> (sujeto-objeto-verbo), flexible según el énfasis.</p>
+            <table class="lc-table">
+              <thead><tr><th>Preposición</th><th>NI</th><th>Conjunción</th><th>NI</th></tr></thead>
+              <tbody>
+                <tr><td>en / de</td><td class="ni">tan / ta</td><td>y / o</td><td class="ni">ne / o</td></tr>
+                <tr><td>con / para</td><td class="ni">kin / kara</td><td>pero / porque</td><td class="ni">pero / melner</td></tr>
+                <tr><td>por / sobre</td><td class="ni">diltut / śarlaŕnen</td><td>cuando / si</td><td class="ni">tisbek / nisgan</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <!-- 11 · Clíticos -->
+        <article class="lc-slide" role="tabpanel" aria-label="11 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 11</span>
+            <h3>Pronombres átonos (clíticos)</h3>
+            <p>Con verbo en <strong>forma finita</strong>, el clítico va suelto y delante: <span class="ni">nei buŕdam-ke</span> «me ayuda».</p>
+            <p>Con <strong>imperativo, infinitivo o gerundio</strong>, va sufijado en cadena: <span class="ni">buŕdam-ka-nei</span> «ayúdame».</p>
+            <div class="lc-chips">
+              <span class="chip">me <b class="ni">nei</b></span>
+              <span class="chip">te <b class="ni">teś</b></span>
+              <span class="chip">se <b class="ni">unsa</b></span>
+              <span class="chip">nos <b class="ni">guei</b></span>
+              <span class="chip">os <b class="ni">suei</b></span>
+              <span class="chip">le <b class="ni">eni</b></span>
+              <span class="chip">lo / la <b class="ni">enu / ena</b></span>
+            </div>
+          </div>
+        </article>
+
+        <!-- 12 · Frases de ejemplo -->
+        <article class="lc-slide" role="tabpanel" aria-label="12 de 12" hidden>
+          <div class="lc-card">
+            <span class="lc-kicker">Capítulo 12</span>
+            <h3>Frases de ejemplo</h3>
+            <ul class="lc-phrases">
+              <li><span class="ni">nai śe kaŕdakdik-ke-n</span><em>yo te veo</em></li>
+              <li><span class="ni">śe talkunis dukgembek-ke-śe</span><em>tú bebes agua</em></li>
+              <li><span class="ni">nai tan beksek-ke tetgan-ke-n</span><em>yo vivo en casa</em></li>
+              <li><span class="ni">eno nulgarser ituśder-ke</span><em>el perro es bueno</em></li>
+              <li><span class="ni">nai diŕsin-ke-n den śe niśnal-ni-śe</span><em>quiero que tú hables</em></li>
+              <li><span class="ni">buŕdam-ka-nei</span><em>ayúdame</em></li>
+            </ul>
+          </div>
+        </article>
+
+      </div><!-- /lc-track -->
+
+      <button class="lc-arrow lc-next" id="lcNext" aria-label="Capítulo siguiente" type="button">
+        <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true"><path d="M9 4 L17 12 L9 20" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div><!-- /lc-viewport -->
+
+    <div class="lc-counter"><span id="lcCurrent">1</span> <span class="lc-sep">/</span> 12</div>
+  </div><!-- /lang-carousel -->
+
+  <!-- ░ Descargas ░ -->
+  <div class="lang-downloads reveal">
+    <a class="dl-btn dl-primary" href="manual-neoibero.pdf" download>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3 V15 M12 15 L8 11 M12 15 L16 11 M5 19 H19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="dl-text"><b>Manual completo</b><i>Neoíbero para Novatos · PDF</i></span>
+    </a>
+    <a class="dl-btn dl-primary" href="diccionario-neoibero.pdf" download>
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 3 V15 M12 15 L8 11 M12 15 L16 11 M5 19 H19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="dl-text"><b>Diccionario</b><i>Español ↔ neoíbero · PDF</i></span>
+    </a>
   </div>
-  <div class="lang-grid">
-    <div class="lang-card reveal"><h3>Fonología</h3><p>15 consonantes y 5 vocales. La <em>ś</em> representa una sibilante palatal y la <em>ŕ</em> una vibrante múltiple, dos rasgos que dan al idioma una identidad sonora propia.</p></div>
-    <div class="lang-card reveal reveal-delay-1"><h3>Morfología verbal</h3><p>El verbo se organiza como raíz + TAM + persona. Ese esquema permite conjugar de manera regular y legible, con marcas claras para presente, pasado, futuro, condicional o subjuntivo.</p></div>
-  </div>
-  <p class="lang-bridge reveal reveal-delay-2">La lengua intenta ser compleja donde conviene y simple donde es útil: suficiente riqueza para resultar expresiva, suficiente regularidad para que pueda aprenderse y usarse.</p>
-  <div class="lang-grid">
-    <div class="lang-card reveal"><h3>Derivación</h3><p>Sufijos como <em>-tun</em>, <em>-ar</em>, <em>-eŕ</em>, <em>-si</em> o <em>-ŕa</em> permiten generar familias léxicas enteras a partir de una misma raíz.</p></div>
-    <div class="lang-card reveal reveal-delay-1"><h3>Modalidad</h3><p>Marcadores finales como <em>-na</em> para la interrogación o <em>-ba</em> para la exclamación recogen una lógica inspirada en la tipología vasca y refuerzan la musicalidad del idioma.</p></div>
-  </div>
-  <div class="conj-wrap reveal">
-    <h3>Conjugación de <em>niśnal</em> (hablar)</h3>
-    <table class="conj-table">
-      <thead><tr><th>TAM</th><th>Sufijo</th><th>Yo</th><th>Él / ella</th><th>Nosotros</th></tr></thead>
-      <tbody>
-        <tr><td class="tam-label">Presente</td><td class="tam-suffix">-ke</td><td class="form">niśnal-ke-n</td><td class="form">niśnal-ke</td><td class="form">niśnal-ke-gu</td></tr>
-        <tr><td class="tam-label">Pasado</td><td class="tam-suffix">-bo</td><td class="form">niśnal-bo-n</td><td class="form">niśnal-bo</td><td class="form">niśnal-bo-gu</td></tr>
-        <tr><td class="tam-label">Futuro</td><td class="tam-suffix">-ta</td><td class="form">niśnal-ta-n</td><td class="form">niśnal-ta</td><td class="form">niśnal-ta-gu</td></tr>
-        <tr><td class="tam-label">Condicional</td><td class="tam-suffix">-tei</td><td class="form">niśnal-tei-n</td><td class="form">niśnal-tei</td><td class="form">niśnal-tei-gu</td></tr>
-        <tr><td class="tam-label">Subjuntivo</td><td class="tam-suffix">-na</td><td class="form">niśnal-na-n</td><td class="form">niśnal-na</td><td class="form">niśnal-na-gu</td></tr>
-        <tr><td class="tam-label">Subj. imperf.</td><td class="tam-suffix">-nabo</td><td class="form">niśnal-nabo-n</td><td class="form">niśnal-nabo</td><td class="form">niśnal-nabo-gu</td></tr>
-      </tbody>
-    </table>
-  </div>
+
 </div></section>
 
 <!-- ═══ MÚSICA ═══ -->
@@ -1423,5 +1762,70 @@ window.addEventListener('message', function(e) {
     if (iframe) iframe.style.height = e.data.height + 'px';
   }
 });
+</script>
+
+<script>
+/* ░░░ Carrusel de la lengua ░░░ */
+(function(){
+  var root = document.getElementById('langCarousel');
+  if(!root) return;
+  var track   = document.getElementById('lcTrack');
+  var slides  = Array.prototype.slice.call(track.querySelectorAll('.lc-slide'));
+  var nodesBox= document.getElementById('lcNodes');
+  var prevBtn = document.getElementById('lcPrev');
+  var nextBtn = document.getElementById('lcNext');
+  var curOut  = document.getElementById('lcCurrent');
+  var n = slides.length, idx = 0;
+
+  // Construir nodos
+  var nodes = [];
+  for(var i=0;i<n;i++){
+    var b = document.createElement('button');
+    b.type='button'; b.className='lc-node';
+    b.setAttribute('role','tab');
+    b.setAttribute('aria-label','Ir al capítulo '+(i+1));
+    (function(k){ b.addEventListener('click',function(){go(k);}); })(i);
+    nodesBox.appendChild(b); nodes.push(b);
+  }
+
+  function render(){
+    for(var i=0;i<n;i++){
+      var on = (i===idx);
+      slides[i].hidden = !on;
+      nodes[i].classList.toggle('active', on);
+      nodes[i].setAttribute('aria-selected', on?'true':'false');
+    }
+    curOut.textContent = (idx+1);
+    prevBtn.disabled = false; nextBtn.disabled = false;
+  }
+  function go(k){ idx = (k+n)%n; render(); }
+  function next(){ go(idx+1); }
+  function prev(){ go(idx-1); }
+
+  nextBtn.addEventListener('click', next);
+  prevBtn.addEventListener('click', prev);
+
+  // Teclado (solo cuando el carrusel está en pantalla)
+  document.addEventListener('keydown', function(e){
+    var r = root.getBoundingClientRect();
+    var visible = r.top < window.innerHeight*0.6 && r.bottom > window.innerHeight*0.4;
+    if(!visible) return;
+    if(e.key==='ArrowRight'){ next(); }
+    else if(e.key==='ArrowLeft'){ prev(); }
+  });
+
+  // Swipe táctil
+  var x0=null;
+  track.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  track.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 45){ dx < 0 ? next() : prev(); }
+    x0=null;
+  }, {passive:true});
+
+  render();
+})();
+
 </script>
 </body></html>
